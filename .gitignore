@@ -1,0 +1,40 @@
+# Lines starting with '#' are considered comments.
+
+#Ignore xml
+*.xml
+
+# Ignore any file named foo.txt.
+foo.txt
+# Ignore byproducts of compiling latex files
+*.aux
+*.blg
+*.log
+*.out
+*.gz
+*.pdf
+*.bbl
+
+# Ignore plain text files
+*.txt
+# except these ones
+# Ignore old versions
+*~
+
+# Ignore DSStore
+*.DS_Store
+
+#ignore mmp-stuff
+mmp-stuff.bib
+
+#ignore large files
+*.pkl
+*.mat
+*.npy
+*.npz
+
+#ignore err and out from bash
+*.err
+*.out
+
+#ignore python C compilation files
+*.pyc
