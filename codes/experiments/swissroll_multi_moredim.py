@@ -31,7 +31,7 @@ os.chdir(workingdirectory)
 from codes.experimentclasses.SwissRoll49 import SwissRoll49
 from codes.otherfunctions.multirun import get_coeffs_reps
 from codes.otherfunctions.multirun import get_grads_reps_noshape
-from codes.otherfunctions.multiplot import plot_betas_customcolors
+from codes.otherfunctions.multiplot import plot_betas_customcolorsreorder
 
 
 #set parameters
@@ -143,7 +143,7 @@ colors = np.hstack([np.repeat('red',2), np.repeat('black',49)])
 legtitle = 'Function type'
 color_labels = np.asarray(['Manifold coordinates','Ambient coordinates'])
 #plot_betas(experiments, xaxis, title,filename, gnames,nsel)
-plot_betas_customcolors(experiments, xaxis, title,filename, gnames,nsel,colors, legtitle, color_labels)
+plot_betas_customcolorsreorder(experiments, xaxis, title,filename, gnames,nsel,colors, legtitle, color_labels)
 
 2+2
 
