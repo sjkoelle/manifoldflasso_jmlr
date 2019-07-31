@@ -38,3 +38,7 @@ mmp-stuff.bib
 
 #ignore python C compilation files
 *.pyc
+
+#ignore bash byproducts
+*.out
+*.err

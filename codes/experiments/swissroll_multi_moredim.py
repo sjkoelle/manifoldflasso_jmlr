@@ -135,7 +135,11 @@ experiments = get_coeffs_parallel(experiments, nreps, lambdas, itermax, nsel, to
 xaxis = lambdas
 title ='Swiss Roll'
 gnames = np.asarray(list(range(experiment.p)), dtype = str)
-folder = workingdirectory + '/Figures/swissroll/' + now
+#<<<<<<< HEAD
+#folder = workingdirectory + '/Figures/swissroll/' + now
+#=======
+#folder = workingdirectory + '/Figures/swissroll/' + now
+#>>>>>>> 14f3915f9c6d901617a47290a1376c8b2c4e62c3
 #os.mkdir(folder)
 filename = folder + '/betas'
 print('preplot',datetime.datetime.now().strftime("%B_%d_%Y_%H_%M_%S"))
