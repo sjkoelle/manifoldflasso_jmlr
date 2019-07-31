@@ -135,8 +135,8 @@ experiments = get_coeffs_parallel(experiments, nreps, lambdas, itermax, nsel, to
 xaxis = lambdas
 title ='Swiss Roll'
 gnames = np.asarray(list(range(experiment.p)), dtype = str)
-folder = workingdirectory + '/Figures/swissroll/' + now
-os.mkdir(folder)
+#folder = workingdirectory + '/Figures/swissroll/' + now
+#os.mkdir(folder)
 filename = folder + '/betas'
 print('preplot',datetime.datetime.now().strftime("%B_%d_%Y_%H_%M_%S"))
 colors = np.hstack([np.repeat('red',2), np.repeat('black',49)])
