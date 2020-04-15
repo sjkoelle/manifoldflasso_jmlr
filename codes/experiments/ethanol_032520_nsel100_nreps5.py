@@ -30,7 +30,7 @@ os.chdir(workingdirectory)
 from codes.otherfunctions.multiplot import highlight_cell
 from codes.experimentclasses.EthanolAngles import EthanolAngles
 from codes.otherfunctions.multirun import get_coeffs_reps
-from codes.otherfunctions.multirun import get_grads_reps_pca2
+#from codes.otherfunctions.multirun import get_grads_reps_pca2
 from codes.otherfunctions.multiplot import plot_betas, plot_betas2reorder
 from codes.geometer.RiemannianManifold import RiemannianManifold
 from codes.otherfunctions.get_dictionaries import get_atoms_4
@@ -140,7 +140,7 @@ fig.savefig(folder + '/beta_paths')
 supports = {}
 for i in range(nreps):
     supports[i] = get_support(replicates[i].coeffs, dim)
-
+fig, ax = plt.figure(figsize=(15 , 15 ))
 plot_support_2d(supports, experiment.p)
 fig.savefig(folder + '/flasso_support')
 
@@ -162,7 +162,7 @@ for r in range(nreps):
     highlight_cell(supports_brute[r][1],supports_brute[r][0],color="limegreen", linewidth=3,ax=axes_all[r])
     highlight_cell(supports_brute[r][0],supports_brute[r][1],color="limegreen", linewidth=3,ax=axes_all[r])
 fig.savefig(folder + '/olsnorms')
-
+fig, ax = plt.figure(figsize=(15 , 15 ))
 plot_support_2d(supports_brute, experiment.p)
 fig.savefig(folder + '/ols_supports')
 

@@ -145,6 +145,7 @@ supports = {}
 for i in range(nreps):
     supports[i] = get_support(replicates[i].coeffs, dim)
 
+fig, ax = plt.figure(figsize=(15 , 15 ))
 plot_support_1d(supports, experiment.p)
 fig.savefig(folder + '/flasso_support')
 
@@ -160,6 +161,7 @@ for r in range(nreps):
     highlight_cell(0,supports_brute[r][0],color="limegreen", linewidth=3,ax=axes_all[r])
 fig.savefig(folder + '/olsnorms')
 
+fig, ax = plt.figure(figsize=(15 , 15 ))
 plot_support_1d(supports_brute, experiment.p)
 fig.savefig(folder + '/ols_supports')
 
