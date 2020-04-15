@@ -14,8 +14,8 @@ import copy
 np.random.seed(0)
 random.seed(0)
 now = datetime.datetime.now().strftime("%B_%d_%Y_%H_%M_%S")
-workingdirectory = '/Users/samsonkoelle/manifoldflasso_jmlr'
-# workingdirectory = os.popen('git rev-parse --show-toplevel').read()[:-1]
+#workingdirectory = '/Users/samsonkoelle/manifoldflasso_jmlr'
+workingdirectory = os.popen('git rev-parse --show-toplevel').read()[:-1]
 sys.path.append(workingdirectory)
 os.chdir(workingdirectory)
 # print(os.getcwd())
