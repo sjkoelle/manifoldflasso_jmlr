@@ -1,0 +1,19 @@
+mkdir megaman_april
+cd megaman_april
+conda create -n manifold_env_april python=3.5 -y
+source activate manifold_env_april
+conda install --channel=conda-forge -y pip nose coverage cython numpy scipy scikit-learn pyflann pyamg h5py plotly
+mkdir tmp
+cd tmp/
+git clone https://github.com/mmp2/megaman.git
+cd megaman
+python setup.py install
+cd ../..
+conda install pytorch torchvision -c pytorch -y
+
+pip install -U matplotlib
+conda install dill
+conda install --channel=conda-forge --yes pyglmnet
+conda install --channel=conda-forge --yes python-spams
+conda install --channel=conda-forge --yes pathos
+conda install --channel=conda-forge --yes autograd
