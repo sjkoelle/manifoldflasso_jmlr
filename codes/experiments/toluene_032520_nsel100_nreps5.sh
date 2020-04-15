@@ -10,5 +10,5 @@
 #SBATCH --mail-user=sjkoelle@gmail.com # Email to which notifications will be sent
 
 export PATH="~/anaconda3/bin:$PATH"
-source activate py35lynch
+source activate manifold_env_april
 python toluene_032520_nsel100_nreps5.py

@@ -96,6 +96,33 @@ class RiemannianManifold:
         geom.rmetric.Hsvals = np.identity(dim)
         geom.rmetric.Gsvals = np.identity(dim)
 
+    # def plot(self, axes, selected_points, c,s,alpha,filename, cbar = True):
+    #
+    #     data = self.data
+    #     if len(axes) == 2:
+    #         fig = plt.figure(figsize=plt.figaspect(.5))
+    #         ax = fig.add_subplot(1, 1,1)
+    #         cax = ax.scatter(data[:, axes[0]][selected_points], data[:, axes[1]][selected_points],  c = c, s=  s, alpha=alpha, marker = '.')
+    #         ax.set_axis_off()
+    #         if cbar == True:
+    #             fig.colorbar(cax)
+    #         fig.savefig(filename, bbox_inches='tight', pad_inches=0, dpi=200)
+    #     if len(axes) == 3:
+    #         x = data[:, axes[0]][selected_points]
+    #         y = data[:, axes[1]][selected_points]
+    #         z = data[:, axes[2]][selected_points]
+    #         fig = plt.figure(figsize=(15,10))
+    #         ax = fig.add_subplot(1, 1, 1, projection='3d')
+    #         cax = ax.scatter(x, y, z, c=c, s=s, alpha=alpha, marker='.')
+    #         x2, y2, _ = proj3d.proj_transform(x, y, z, ax.get_proj())
+    #         fig2 = plt.figure(figsize=plt.figaspect(.5))
+    #         ax2 = fig2.add_subplot(1, 1, 1)
+    #         cax2 = ax2.scatter(x2, y2, c=c, s=s, alpha=alpha, marker='.')
+    #         ax2.set_axis_off()
+    #         if cbar == True:
+    #             fig2.colorbar(cax2)
+    #         fig2.savefig(filename, bbox_inches='tight', pad_inches=0, dpi=200)
+
     def plot(self, axes, selected_points, c,s,alpha,filename, cbar = True):
 
         data = self.data
@@ -104,23 +131,60 @@ class RiemannianManifold:
             ax = fig.add_subplot(1, 1,1)
             cax = ax.scatter(data[:, axes[0]][selected_points], data[:, axes[1]][selected_points],  c = c, s=  s, alpha=alpha, marker = '.')
             ax.set_axis_off()
+            lims  =np.max(data, axis = 0)
+            q1 = ax.quiver(lims[0], 0, angles='xy', scale_units='xy', scale=1)
+            q2 = ax.quiver( 0,lims[1], angles='xy', scale_units='xy', scale=1)
+            #q1 = ax.quiver(0, 0,  lims[0], 0, scale = .025)
+            #q2 = ax.quiver(0, 0, 0,lims[1], scale = .025)
+            ax.text(x=lims[0], y=0, s=r"$\phi_1$ ", fontsize=25)
+            ax.text(x=0, y=lims[1], s=r"$\phi_2$ ", fontsize=25)
             if cbar == True:
                 fig.colorbar(cax)
             fig.savefig(filename, bbox_inches='tight', pad_inches=0, dpi=200)
         if len(axes) == 3:
+
             x = data[:, axes[0]][selected_points]
             y = data[:, axes[1]][selected_points]
             z = data[:, axes[2]][selected_points]
-            fig = plt.figure(figsize=(15,10))
+            fig = plt.figure(figsize=(15, 10))
             ax = fig.add_subplot(1, 1, 1, projection='3d')
+            coords = np.identity(3)
             cax = ax.scatter(x, y, z, c=c, s=s, alpha=alpha, marker='.')
             x2, y2, _ = proj3d.proj_transform(x, y, z, ax.get_proj())
+            lims = np.max(data, axis=0)
+            coords[0, 0] = lims[0]
+            coords[1, 1] = lims[1]
+            coords[2, 2] = lims[2]
+            # coord_proj_x, coord_proj_y, _ = proj3d.proj_transform(coords[:,0],coords[:,1],coords[:,2], ax.get_proj())
+            coord_proj_x, coord_proj_y, _ = proj3d.proj_transform(coords[:, 0], coords[:, 1], coords[:, 2],
+                                                                  ax.get_proj())
+
             fig2 = plt.figure(figsize=plt.figaspect(.5))
             ax2 = fig2.add_subplot(1, 1, 1)
             cax2 = ax2.scatter(x2, y2, c=c, s=s, alpha=alpha, marker='.')
             ax2.set_axis_off()
+            q1 = ax2.quiver(0, 0, coord_proj_x[0], coord_proj_y[0], scale=1, units='xy', angles='xy', scale_units='xy')
+            q2 = ax2.quiver(0, 0, coord_proj_x[1], coord_proj_y[1], scale=1, units='xy', angles='xy', scale_units='xy')
+            q3 = ax2.quiver(0, 0, coord_proj_x[2], coord_proj_y[2], scale=1, units='xy', angles='xy', scale_units='xy')
+            ax2.text(x=coord_proj_x[0], y=coord_proj_y[0], s=r"$\phi_1$ ", fontsize=25)
+            ax2.text(x=coord_proj_x[1], y=coord_proj_y[1], s=r"$\phi_2$ ", fontsize=25)
+            ax2.text(x=coord_proj_x[2], y=coord_proj_y[2], s=r"$\phi_3$ ", fontsize=25)
+            # ax2.quiverkey(q1, X = 0, Y = 0, U = .002, label = 'arrow 1', coordinates='data')
             if cbar == True:
                 fig2.colorbar(cax2)
+            # x = data[:, axes[0]][selected_points]
+            # y = data[:, axes[1]][selected_points]
+            # z = data[:, axes[2]][selected_points]
+            # fig = plt.figure(figsize=(15,10))
+            # ax = fig.add_subplot(1, 1, 1, projection='3d')
+            # cax = ax.scatter(x, y, z, c=c, s=s, alpha=alpha, marker='.')
+            # x2, y2, _ = proj3d.proj_transform(x, y, z, ax.get_proj())
+            # fig2 = plt.figure(figsize=plt.figaspect(.5))
+            # ax2 = fig2.add_subplot(1, 1, 1)
+            # cax2 = ax2.scatter(x2, y2, c=c, s=s, alpha=alpha, marker='.')
+            # ax2.set_axis_off()
+            # if cbar == True:
+            #     fig2.colorbar(cax2)
             fig2.savefig(filename, bbox_inches='tight', pad_inches=0, dpi=200)
 
 
