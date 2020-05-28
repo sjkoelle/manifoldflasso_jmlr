@@ -468,3 +468,43 @@ def get_olsnorm_and_supportsbrute_1d(experiment, replicates):
             ols_norm[r, parameterizations_possible[j][0]] = penalties[r, j]
         supports_brute[r] = parameterizations_possible[penalties[r, :].argmin()]
     return (ols_norm, supports_brute)
+
+
+def get_grads_reps_pca2_tangent(experiment, nreps, nsel,cores, projector):
+
+    experiments = {}
+    dim = experiment.dim
+    dimnoise = experiment.dimnoise
+    for i in range(nreps):
+        experiments[i] = copy.copy(experiment)
+        experiments[i].M.selected_points = np.random.choice(list(range(experiment.n)), nsel, replace=False)
+        tangent_bases = experiments[i].M.get_wlpca_tangent_sel(experiments[i].Mpca, experiments[i].M.selected_points,dimnoise)
+        subM = RiemannianManifold(experiments[i].Mpca.data[experiments[i].M.selected_points], dim)
+        subM.tb = TangentBundle(subM, tangent_bases)
+        experiments[i].N.tangent_bundle = TangentBundle(experiments[i].N, experiments[i].N.geom.rmetric.embedding_eigenvectors)
+        #experiments[i].df_M = experiments[i].get_dF_js_idM(experiments[i].Mpca, experiments[i].N, subM.tb, experiments[i].N.tangent_bundle,
+        #                                           experiments[i].M.selected_points,dimnoise)
+        #experiments[i].df_M = experiments[i].df_M / np.linalg.norm(experiments[i].df_M, axis=1).sum(axis=0)
+        #experiments[i].df_M2 = experiments[i].df_M / np.linalg.norm(experiments[i].df_M) ** 2
+        experiments[i].df_M = np.asarray([np.identity(dim) for i in range(nsel)])
+        experiments[i].dg_x = experiments[i].get_dx_g_full(experiments[i].M.data[experiments[i].M.selected_points])
+        experiments[i].W = ShapeSpace(experiments[i].positions, experiments[i].M.data)
+        experiments[i].dw = experiments[i].W.get_dw(cores, experiments[i].atoms3, experiments[i].natoms, experiments[i].M.selected_points)
+        experiments[i].dg_w = experiments[i].project(np.swapaxes(experiments[i].dw, 1, 2),
+                                             experiments[i].project(experiments[i].dw, experiments[i].dg_x))
+        experiments[i].dg_w_pca = np.asarray([np.matmul(projector, experiments[i].dg_w[j].transpose()).transpose() for j in range(nsel)])
+        experiments[i].dgw_norm = experiments[i].normalize(experiments[i].dg_w_pca)
+        # tb_w_tangent_bases = experiment.project(experiment.dw_pca, np.swapaxes(subM.tb.tangent_bases,1,2))
+        # experiment.dgw_norm = experiment.normalize(experiment.dg_w)
+        #experiment[i].dg_M = experiment.project(subM.tb.tangent_bases, experiment.dgw_norm)
+        experiments[i].dg_M = experiments[i].project(subM.tb.tangent_bases, experiments[i].dgw_norm)
+
+        #experiments[i].dw_pca = np.asarray([np.matmul(projector, experiments[i].dw[j]) for j in range(nsel)])
+        #experiments[i].dg_w = experiments[i].project(experiments[i].dw_pca, np.swapaxes(experiments[i].dg_x_pca,1,2))
+        #tb_w_tangent_bases = experiments[i].project(experiments[i].dw_pca, np.swapaxes(subM.tb.tangent_bases, 1, 2))
+        #experiments[i].dw_norm = experiments[i].normalize(experiments[i].dg_w)
+        #experiments[i].dg_M = experiments[i].project(np.swapaxes(tb_w_tangent_bases, 1, 2), experiments[i].dw_norm)
+
+        #experiments[i].coeffs = experiments[i].get_betas_spam2(experiments[i].xtrain, experiments[i].ytrain, experiments[i].groups, lambdas,
+        #                                              nsel, experiments[i].q, itermax, tol)
+    return(experiments)

@@ -955,6 +955,68 @@ def plot_reg_path_ax_lambdasearch(axes, coeffs, xaxis,fig):
     #    nreps))
 
 
+def plot_reg_path_ax_lambdasearch_tangent(axes, coeffs, xaxis,fig):
+    p = coeffs.shape[3]
+    #q = coeffs.shape[1]
+    gnames = np.asarray(list(range(p)), dtype=str)
+
+    # xlabel = r"$\displaystyle \lambda$"
+    # ylabel = r"$\displaystyle \|\hat \beta_{j}\|_2$"
+    rcParams['axes.titlesize'] = 30
+    plt.rc('text', usetex=True)
+
+    norm = matplotlib.colors.Normalize(vmin=0, vmax=p)
+    cmap = plt.cm.rainbow
+    # maxes = np.zeros(q)
+    # for k in range(q):
+    #     maxes[k] = np.linalg.norm(coeffs[:, k, :, :], axis=1).max()
+    # normax = maxes.max()
+    normax = np.sqrt(np.sum(np.sum(np.sum(coeffs ** 2, axis=1), axis=1), axis=1).max())
+
+    # for k in range(q):
+    #     for j in range(p):
+    #         toplot = np.linalg.norm(coeffs[:, k, :, j], axis=1)
+    #         w = .15
+    #         widths = np.asarray([width(xaxis[i], w) for i in range(len(xaxis))])
+    #         # axes[k+1].boxplot(toplot, positions=xaxis, showfliers=False, vert=True, widths=widths,medianprops=dict(linestyle=''))
+    #         axes[k + 1].plot(xaxis, toplot, 'go--', linewidth=5, markersize=0, alpha=1.,
+    #                          color=cmap(norm(j)), label=gnames[j])
+    for j in range(p):
+        toplot = np.linalg.norm(np.linalg.norm(coeffs[:, :, :, j], axis=2), axis=1)
+        # axes[0].boxplot(toplot, positions=xaxis, showfliers=False, vert=True, widths=widths,medianprops=dict(linestyle=''))
+        axes.plot(xaxis, toplot, 'go--', linewidth=5, markersize=0, alpha=1.,
+                     color=cmap(norm(j)), label=gnames[j])
+
+    kkk = xaxis.copy()
+    kkk.sort()
+
+    # xupperindex = np.min(np.where(np.sum(np.sum(np.sum(coeffs**2, axis = 1), axis = 1), axis = 1) ==0)[0])
+
+
+    axes.tick_params(labelsize=50)
+    axes.set_xscale('symlog')
+    axes.set_yscale('symlog')
+    axes.set_ylim(bottom=0, top=normax)
+    # axes[k].set_xlim(left = 0, right = xaxis[xupperindex])
+    tixx = np.hstack([np.asarray([0]), 10 ** np.linspace(math.floor(np.log10(normax)), math.floor(np.log10(normax)) + 1, 2)])
+    axes.set_title("Norms", fontdict={'fontsize': 50})
+    axes.grid(True, which="both", alpha=True)
+
+    handles, labels = axes.get_legend_handles_labels()
+    by_label = OrderedDict(zip(labels, handles))
+    # fig.text(0.5, 0.04, xlabel, ha='center', va='center', fontsize=50)
+    # fig.text(0.05, 0.5, ylabel, ha='center', va='center', rotation='vertical', fontsize=60)
+    fig.subplots_adjust(right=0.75)
+    leg_ax = fig.add_axes([.8, 0.15, 0.05, 0.7])
+    leg_ax.axis('off')
+    leg = leg_ax.legend(by_label.values(), gnames, prop={'size': 200 / p})
+    # leg.set_title('Torsion', prop={'size': Function})
+    for l in leg.get_lines():
+        l.set_alpha(1)
+    # fig.savefig(filename + 'beta_paths_n' + str(n) + 'nsel' + str(nsel) + 'nreps' + str(
+    #    nreps))
+
+
 
 
 def plot_reg_path_ax_lambdasearch_customcolors(axes, coeffs, xaxis,fig, colors):

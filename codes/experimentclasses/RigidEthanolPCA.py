@@ -132,4 +132,3 @@ class RigidEthanolPCA(AtomicRegression):
         svd.fit(data)
         data_pca = svd.transform(data)
         return (RiemannianManifold(data, dim), RiemannianManifold(data_pca,dim), svd.components_)
-

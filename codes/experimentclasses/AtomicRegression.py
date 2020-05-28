@@ -102,10 +102,39 @@ class AtomicRegression(FlassoManifold):
             output[i, :, :] = self.get_dx_g(data[i]).transpose()
         return (output)
 
+    def get_dx_torsionsangles_full(self, data):
+        d = self.d
+        p = self.p
+        n = data.shape[0]
+        atoms4 = self.atoms4
+        natoms4 = len(atoms4)
+
+        output = np.zeros((n, p, d))
+        for i in range(n):
+            output[i, :natoms4, :] = self.get_dx_g(data[i]).transpose()
+            output[i, natoms4:, :] = np.identity(d)
+
+        return (output)
+
+    # def get_dx_torsionsangles(self, data):
+    #     d = self.d
+    #     p = self.p
+    #     n = data.shape[0]
+    #
+    #     atoms4 = self.atoms4
+    #     natoms4 = len(atoms4)
+    #
+    #
+    #         output[i, :natoms4, :] = self.get_dx_g(data[i]).transpose()
+    #         output[i,natoms4:,:] = np.identity(d)
+    #
+    #     return (output)
+
     def get_dx_g(self, x):
         atoms4 = self.atoms4
         atoms3 = self.atoms3
-        p = self.p
+        #p = self.p
+        p = len(self.atoms4)
         d = self.d
 
         combos = np.asarray([[0, 1, 2], [1, 2, 3], [0, 2, 3], [0, 1, 3]])

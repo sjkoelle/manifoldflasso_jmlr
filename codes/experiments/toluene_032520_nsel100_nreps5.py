@@ -141,6 +141,7 @@ for i in range(nreps):
     plot_reg_path_ax_lambdasearch(axes_all[i], replicates[i].coeffs, replicates[i].lambdas_plot * np.sqrt(m * nsel), fig)
 fig.savefig(folder + '/beta_paths')
 
+
 supports = {}
 for i in range(nreps):
     supports[i] = get_support(replicates[i].coeffs, dim)
