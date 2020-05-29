@@ -28,10 +28,7 @@ now = datetime.datetime.now().strftime("%B_%d_%Y_%H_%M_%S")
 workingdirectory = os.popen('git rev-parse --show-toplevel').read()[:-1]
 sys.path.append(workingdirectory)
 os.chdir(workingdirectory)
-from codes.experimentclasses.MalonaldehydeAngles import MalonaldehydeAngles
-from codes.otherfunctions.multirun import get_coeffs_reps
-from codes.otherfunctions.multiplot import plot_betas, plot_betas2reorder
-from codes.geometer.RiemannianManifold import RiemannianManifold
+from codes.experimentclasses.RigidEthanolPCA import RigidEthanolPCA
 from codes.otherfunctions.get_dictionaries import get_atoms_4
 from codes.otherfunctions.get_grads import get_grads
 from codes.otherfunctions.multirun import get_support_recovery_lambda
@@ -41,10 +38,8 @@ from codes.otherfunctions.multirun import get_support
 from codes.otherfunctions.multiplot import plot_support_2d
 from codes.otherfunctions.multiplot import plot_reg_path_ax_lambdasearch
 from codes.otherfunctions.multiplot import plot_gs_v_dgnorm
-from codes.otherfunctions.multirun import get_cosines
 from codes.otherfunctions.multiplot import plot_dot_distributions
-from codes.geometer.ShapeSpace import ShapeSpace
-from codes.geometer.TangentBundle import TangentBundle
+from codes.otherfunctions.multirun import get_cosines
 from codes.flasso.Replicate import Replicate
 from codes.otherfunctions.multirun import get_olsnorm_and_supportsbrute
 from codes.otherfunctions.multiplot import highlight_cell
@@ -59,49 +54,49 @@ lambdas = np.asarray(np.hstack([np.asarray([0]),np.logspace(-3,1,11)]), dtype = 
 n_neighbors = 1000 #number of neighbors in megaman
 m = 3 #number of embedding dimensions (diffusion maps)
 #diffusion_time = 1. #diffusion time controls gaussian kernel radius per gradients paper
-diffusion_time = 1. #(yuchia suggestion)
+diffusion_time = 0.05 #(yuchia suggestion)
 dim = 2 #manifold dimension
 dimnoise = 2
 natoms = 9
 cores = 3 #number of cores for parallel processing
 cor = 0.0 #correlation for noise
 var = 0.00001 #variance scaler for noise
-ii = np.asarray([0, 0, 0, 1, 1, 1, 2, 2])
-jj = np.asarray([4, 5, 1, 6, 7, 2, 3, 8])
+cor = 0.0 #correlation for noise
+var = 0.00001 #variance scaler for noise
+ii = np.asarray([0,0,0,0,1,1,1,2]) # atom adjacencies for dihedral angle computation
+jj = np.asarray([1,2,3,4,5,6,7,8])
+
 #run experiment
-#these are just for loading... probably not necessary
-atoms4 = np.asarray([[4,0,1,2],[0,1,2,3],[3,2,1,8],[4,0,1,5]],dtype = int)
+atoms4 = np.asarray([[6,1,0,4],[4,0,2,8],[7,6,5,1],[3,0,2,4]],dtype = int)
 nreps = 5
 lambda_max = 1
 max_search = 30
 
-folder = workingdirectory + '/Figures/malonaldehyde/' + now + 'n' + str(n) + 'nsel' + str(nsel) + 'nreps' + str(nreps)
+folder = workingdirectory + '/Figures/rigidethanol/' + now + 'n' + str(n) + 'nsel' + str(nsel) + 'nreps' + str(nreps)
 os.mkdir(folder)
 
-src = workingdirectory + '/codes/experiments/malonaldehyde_032520_nsel100_nreps5.py'
+src = workingdirectory + '/codes/experiments/rigidethanol_032520_nsel100_nreps5_var0.py'
 filenamescript = folder + '/script.py'
 copyfile(src, filenamescript)
 
 new_MN = True
 new_grad = True
-savename = 'malonaldehyde_032520'
-savefolder = 'malonaldehyde'
-loadfolder = 'malonaldehyde'
-loadname = 'malonaldehyde_032520'
+savename = 'rigidethanol_032520'
+savefolder = 'rigidethanol'
+loadfolder = 'rigidethanol'
+loadname = 'rigidethanol_032520'
 if new_MN == True:
-    experiment = MalonaldehydeAngles(dim, ii, jj,cores,atoms4)
-    projector  = np.load(workingdirectory + '/untracked_data/chemistry_data/malonaldehydeangles022119_pca50_components.npy')
-    experiment.M = experiment.load_data()  # if noise == False then noise parameters are overriden
-    experiment.Mpca = RiemannianManifold(np.load(workingdirectory + '/untracked_data/chemistry_data/malonaldehydeangles022119_pca50.npy'), dim)
+    experiment = RigidEthanolPCA(dim, cor, var, ii, jj, cores, False, atoms4)
+    experiment.M, experiment.Mpca, projector = experiment.generate_data(noise=True)
     experiment.q = m
     experiment.m = m
     experiment.dimnoise = dimnoise
     experiment.projector = projector
     experiment.Mpca.geom = experiment.Mpca.compute_geom(diffusion_time, n_neighbors)
     experiment.N = experiment.Mpca.get_embedding3(experiment.Mpca.geom, m, diffusion_time, dim)
-    with open(workingdirectory + '/untracked_data/embeddings/' + savefolder + '/' + savename + '.pkl' ,
-             'wb') as output:
-         pickle.dump(experiment, output, pickle.HIGHEST_PROTOCOL)
+    # with open(workingdirectory + '/untracked_data/embeddings/' + savefolder + '/' + savename + '.pkl' ,
+    #          'wb') as output:
+    #      pickle.dump(experiment, output, pickle.HIGHEST_PROTOCOL)
 
 atoms4,p = get_atoms_4(natoms,ii,jj)
 experiment.p = p
@@ -144,8 +139,7 @@ supports = {}
 for i in range(nreps):
     supports[i] = get_support(replicates[i].coeffs, dim)
 
-fig, ax = plt.subplots(figsize=(15 , 15 ))
-#fig, ax = plt.figure(figsize=(15 , 15 ))
+fig, ax = plt.figure(figsize=(15 , 15 ))
 plot_support_2d(supports, experiment.p)
 fig.savefig(folder + '/flasso_support')
 
@@ -168,8 +162,7 @@ for r in range(nreps):
     highlight_cell(supports_brute[r][0],supports_brute[r][1],color="limegreen", linewidth=3,ax=axes_all[r])
 fig.savefig(folder + '/olsnorms')
 
-#fig, ax = plt.figure(figsize=(15 , 15 ))
-fig, ax = plt.subplots(figsize=(15 , 15 ))
+fig, ax = plt.figure(figsize=(15 , 15 ))
 plot_support_2d(supports_brute, experiment.p)
 fig.savefig(folder + '/ols_supports')
 
@@ -177,5 +170,5 @@ plot_gs_v_dgnorm(experiment,replicates)
 fig.savefig(folder + '/gs_v_dgnorm.png')
 
 plot_dot_distributions(experiment,replicates)
-fig.savefig(folder + '/dot_distributions.png')
+fig.savefig(folder + '/gs_v_dgnorm.png')
 
