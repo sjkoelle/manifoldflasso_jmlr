@@ -77,7 +77,7 @@ class FlassoExperiment:
                 if np.linalg.norm(differential[i, j, :]) > 0:
                     vectornorms[i, j] = np.linalg.norm(differential[i, j, :])
         # psum = np.sum(vectornorms, axis = 0)
-        psum = np.sqrt(np.sum(vectornorms ** 2, axis=0))
+        psum = np.sum(vectornorms ** 2, axis=0)#np.sqrt(np.sum(vectornorms ** 2, axis=0))
         for j in range(p):
             if psum[j] > 0:
                 differential_normalized[:, j, :] = (differential[:, j, :] / psum[j])  # *n
