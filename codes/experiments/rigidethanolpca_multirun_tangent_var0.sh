@@ -3,7 +3,7 @@
 #SBATCH --partition largemem     # Slurm partition to use
 #SBATCH --ntasks 16          # Number of tasks to run. By default, one CPU core will be allocated per task
 #SBATCH --time 0-15:00        # Wall time limit in D-HH:MM
-#SBATCH --mem-per-cpu=50000     # Memory limit for each tasks (in MB)
+#SBATCH --mem-per-cpu=10000     # Memory limit for each tasks (in MB)
 #SBATCH -o myscript_re%j.out    # File to which STDOUT will be written
 #SBATCH -e myscript_re%j.err    # File to which STDERR will be written
 #SBATCH --mail-type=ALL       # Type of email notification- BEGIN,END,FAIL,ALL
@@ -11,4 +11,4 @@
 
 export PATH="~/anaconda3/bin:$PATH"
 source activate manifold_env_april
-python rigidethanol_multirun_tangent_var0.py
+python rigidethanolpca_multirun_tangent_var0.py
