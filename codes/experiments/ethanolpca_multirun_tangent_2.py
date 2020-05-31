@@ -14,6 +14,7 @@
 #source = f.read()
 #exec(source)
 import matplotlib
+from shutil import copyfile
 matplotlib.use('Agg')
 import os
 import datetime
@@ -65,13 +66,17 @@ atoms4 = np.asarray([[6,1,0,4],[4,0,2,8],[7,6,5,1],[3,0,2,4]],dtype = int)
 folder = workingdirectory + '/Figures/ethanol/' + now
 os.mkdir(folder)
 
+src = workingdirectory + '/codes/experiments/ethanolpca_multirun_tangent_2.py'
+filenamescript = folder + '/script.py'
+copyfile(src, filenamescript)
+
 new_MN = False
 new_grad = True
 savename = 'ethanol_052820'
 savefolder = 'ethanol'
 loadfolder = 'ethanol'
 loadname = 'ethanol_052820'
-nreps = 25
+nreps = 5
 atoms4,p = get_atoms_4(9,ii,jj)
 if new_MN == True:
     experiment = EthanolAngles(dim,  ii, jj,cores,atoms4)
@@ -129,7 +134,6 @@ for i in range(nreps):
 with open(folder + '/replicates' + savename + '.pkl','wb') as output:
     pickle.dump(replicates, output, pickle.HIGHEST_PROTOCOL)
 #
-# from shutil import copyfile
-# src = workingdirectory + '/codes/experiments/ethanolpca_multirun_tangent_2.py'
-# copyfile(src, filenamescript)
-#
+
+
+

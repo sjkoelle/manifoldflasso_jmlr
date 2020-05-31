@@ -70,19 +70,26 @@ class FlassoExperiment:
         p = differential.shape[1]
         d = differential.shape[2]
 
-        differential_normalized = np.zeros(differential.shape)
-        vectornorms = np.zeros((n, p))
-        for i in range(n):
-            for j in range(p):
-                if np.linalg.norm(differential[i, j, :]) > 0:
-                    vectornorms[i, j] = np.linalg.norm(differential[i, j, :])
-        # psum = np.sum(vectornorms, axis = 0)
-        psum = np.sum(vectornorms ** 2, axis=0)#np.sqrt(np.sum(vectornorms ** 2, axis=0))
-        for j in range(p):
-            if psum[j] > 0:
-                differential_normalized[:, j, :] = (differential[:, j, :] / psum[j])  # *n
+        gammas = np.sum(np.sum(differential ** 2, axis=2), axis=0) ** (.5)
+        normed = np.swapaxes(differential, 1, 2) / gammas
+        #print(normed.shape)
+        normed = np.swapaxes(normed, 1, 2)
+    #
+    #     differential_normalized = np.zeros(differential.shape)
+    #     vectornorms = np.zeros((n, p))
+    #     for i in range(n):
+    #         for j in range(p):
+    #             if np.linalg.norm(differential[i, j, :]) > 0:
+    #                 vectornorms[i, j] = np.linalg.norm(differential[i, j, :])
+    #     # psum = np.sum(vectornorms, axis = 0)
+    #     psum = np.sqrt(np.sum(vectornorms ** 2, axis=0))#np.sum(vectornorms ** 2, axis=0)#
+    #     for j in range(p):
+    #         if psum[j] > 0:
+    #             differential_normalized[:, j, :] = (differential[:, j, :] / psum[j])  # *n
+    #
+    #     return (differential_normalized)
+        return(normed)
 
-        return (differential_normalized)
 
     def get_betas_sam(self, xtrain, ytrain, groups, lambdas, n, q, max_iter, tol, learning_rate):
 
@@ -115,7 +122,6 @@ class FlassoExperiment:
             xmat[(i * dim):(i * dim + dim), (i * p):(i * p + p)] = dg_M[i, :, :].transpose()
         b = [xmat] * dim
         xmatq = scipy.linalg.block_diag(*b)
-        groups = np.zeros(n * p * dim)
         groups = np.tile(np.tile(np.asarray(np.linspace(start=0, stop=(p - 1), num=p), dtype=int), n), dim)
 
         return (xmatq, list(groups))
@@ -144,14 +150,14 @@ class FlassoExperiment:
         output = self.construct_X_js(dg_M_subset)
         return (output)
 
-    def construct_Y(self, df_M, sample_pts):
-        """ df_M should have shape n x dim x m
+    def construct_Y(self, df_M):
+        """ df_M should have shape n x dim x dim
         """
-        n = len(sample_pts)
-        dim = self.dim
+        n = df_M.shape[0]
+        dim = df_M.shape[1]
 
-        reorg1 = np.swapaxes(df_M, 0, 1)
-        yvec = np.reshape(reorg1, (n * dim * dim))
+        #reorg1 = np.swapaxes(df_M, 0, 1)
+        yvec = np.reshape(np.swapaxes(df_M,0,1), (n * dim * dim))
         return (yvec)
 
     def construct_Y_js(self, df_M, dim=None):

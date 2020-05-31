@@ -383,15 +383,15 @@ def get_support_recovery_lambda(experiment, replicate, lambda_max, max_search, d
     return (high_probe, coeffs, combined_norms)
 
 
-def get_coeffs_and_lambdas(coeff_dict, lower_lambda, higher_lambda):
-    lambdas = np.asarray(list(coeff_dict.keys()))
-    lambdas.sort()
-    lambdas_relevant = np.asarray([x for x in lambdas if lower_lambda <= x <= higher_lambda])
-    print(lambdas_relevant.shape)
-    coeffs = np.zeros(np.hstack([len(lambdas_relevant), coeff_dict[0].shape[1:]]))
-    for i in range(len(lambdas_relevant)):
-        coeffs[i] = coeff_dict[lambdas_relevant[i]][0]
-    return (coeffs, lambdas_relevant)
+# def get_coeffs_and_lambdas(coeff_dict, lower_lambda, higher_lambda):
+#     lambdas = np.asarray(list(coeff_dict.keys()))
+#     lambdas.sort()
+#     lambdas_relevant = np.asarray([x for x in lambdas if lower_lambda <= x <= higher_lambda])
+#     print(lambdas_relevant.shape)
+#     coeffs = np.zeros(np.hstack([len(lambdas_relevant), coeff_dict[0].shape[1:]]))
+#     for i in range(len(lambdas_relevant)):
+#         coeffs[i] = coeff_dict[lambdas_relevant[i]][0]
+#     return (coeffs, lambdas_relevant)
 
 
 def get_coeffs_and_lambdas(coeff_dict, lower_lambda, higher_lambda):

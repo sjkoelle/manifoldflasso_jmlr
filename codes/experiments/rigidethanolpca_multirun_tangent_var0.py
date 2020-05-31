@@ -14,6 +14,7 @@
 #source = f.read()
 #exec(source)
 import matplotlib
+from shutil import copyfile
 matplotlib.use('Agg')
 import os
 import datetime
@@ -73,10 +74,14 @@ savename = 'rigidethanol_032520'
 savefolder = 'rigidethanol'
 loadfolder = 'rigidethanol'
 loadname = 'rigidethanol_032520'
-nreps = 25
+nreps = 5
 atoms4,p = get_atoms_4(9,ii,jj)
 folder = workingdirectory + '/Figures/rigidethanol/' + now + 'n' + str(n) + 'nsel' + str(nsel) + 'nreps' + str(nreps)
 os.mkdir(folder)
+
+src = workingdirectory + '/codes/experiments/rigidethanolpca_multirun_tangent_var0.py'
+filenamescript = folder + '/script.py'
+copyfile(src, filenamescript)
 
 if new_MN == True:
     experiment = RigidEthanolPCA(dim, cor,var,ii,jj, cores, False, atoms4)
@@ -125,54 +130,16 @@ for i in range(nreps):
     replicates[i].lower_lambda,replicates[i].coeff_dict,replicates[i].combined_norms = get_lower_interesting_lambda(experiment, replicates[i],  lambda_max, max_search)
     #= experiment.get_betas_spam2(replicates[i].xtrain, replicates[i].ytrain, replicates[i].groups, lambdas, len(selected_points), n_embedding_coordinates, itermax, tol)
 
-#fig, axes_all = plt.subplots(nreps, 1,figsize=(15 * m, 15*nreps))
-#fig.suptitle('Regularization paths')
 for i in range(nreps):
     replicates[i].coeffs, replicates[i].lambdas_plot = get_coeffs_and_lambdas(replicates[i].coeff_dict, replicates[i].lower_lambda, replicates[i].higher_lambda)
-#    plot_reg_path_ax_lambdasearch_tangent(axes_all[i], replicates[i].coeffs, replicates[i].lambdas_plot * np.sqrt(m * nsel), fig)
-#fig.savefig(folder + '/beta_paths')
 
 with open(folder + '/replicates' + savename + '.pkl','wb') as output:
     pickle.dump(replicates, output, pickle.HIGHEST_PROTOCOL)
-#experiment = RigidEthanolPCA(dim, cor,var,ii,jj, cores, False, atoms4)
-#experiment.M, experiment.Mpca,projector  = experiment.generate_data(noise = False)
-#experiment.q = n_components
-#experiment.dimnoise = dimnoise
-#experiment.Mpca.geom = experiment.Mpca.compute_geom(diffusion_time, n_neighbors)
-#experiment.N = experiment.Mpca.get_embedding3(experiment.Mpca.geom, n_components, diffusion_time, dim)
-#experiment.g0 = experiment.get_g_full_sub(experiment.M.data,experiment.atoms4[0])
-#experiment.g1 = experiment.get_g_full_sub(experiment.M.data,experiment.atoms4[1])
-#folder = workingdirectory + '/Figures/rigidethanol/' + now
-#os.mkdir(folder)
-#experiment.N.plot([0,1,2], list(range(n)),experiment.g0,.1,.1, folder + '/g1')
-#experiment.N.plot([0,1,2], list(range(n)),experiment.g1,.1,.1, folder + '/g2')
+#
 
-#experiment.M.selected_points = np.random.choice(list(range(n)),nsel,replace = False)
-#import pickle
-#with open('ethanolsavegeom1.pkl', 'wb') as output:
-#    pickle.dump(experiment.N, output, pickle.HIGHEST_PROTOCOL)
-# print('pregrad',datetime.datetime.now().strftime("%B_%d_%Y_%H_%M_%S"))
-# experiments = get_grads_reps_pca2_tangent(experiment, nreps, nsel,cores,projector)
-# #experiments.df_M
-# #with open('tolueneexperiments0306_3custom_1000.pkl', 'wb') as output:
-# #    pickle.dump(experiments, output, pickle.HIGHEST_PROTOCOL)
-# print('precoeff',datetime.datetime.now().strftime("%B_%d_%Y_%H_%M_%S"))
-# experiments = get_coeffs_reps_tangent(experiments, nreps, lambdas, itermax,nsel,tol)
-# xaxis = np.asarray(lambdas, dtype = np.float64) * np.sqrt(n * n_components)
-# title ='RigidEthanolTangent'
-# gnames = np.asarray([r"$\displaystyle g_1$",
-# 	r"$\displaystyle g_2$",
-# 	r"$\displaystyle g_3$",
-# 	r"$\displaystyle g_4$"])
-# #gnames = np.asarray(list(range(experiment.p)), dtype = str)
-# #folder = workingdirectory + '/Figures/rigidethanol/' + now
-# #os.mkdir(folder)
-# filename = folder + '/betas'
-# print('preplot',datetime.datetime.now().strftime("%B_%d_%Y_%H_%M_%S"))
-# plot_betas2reorder_tangent(experiments, xaxis, title,filename, gnames,nsel)
-# for j in range(nreps):
-#     np.save(folder+'/coeffs' + 'rep'+ str(j) + 'var'+str(var), experiments[j].coeffs)
-# filenamescript = folder + '/script.py'
-# from shutil import copyfile
-# src = workingdirectory + '/codes/experiments/rigidethanolpca_multirun_tangent_var0.py'
-# copyfile(src, filenamescript)
+
+# #nreps = 5
+# supports = {}
+# for i in range(nreps):
+#     #print(i)
+#     supports[i] = get_support(replicates[i].coeffs, dim)
