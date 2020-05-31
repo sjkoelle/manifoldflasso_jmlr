@@ -14,6 +14,7 @@
 #source = f.read()
 #exec(source)
 import matplotlib
+from shutil import copyfile
 matplotlib.use('Agg')
 import os
 import datetime
@@ -42,7 +43,7 @@ import matplotlib.pyplot as plt
 
 #set parameters
 n = 50000 #number of data points to simulate
-nsel = 50 #number of points to analyze with lasso
+nsel = 100 #number of points to analyze with lasso
 itermax = 1000 #maximum iterations per lasso run
 tol = 1e-10 #convergence criteria for lasso
 #lambdas = np.asarray([5,10,15,20,25,50,75,100], dtype = np.float16)#lambda values for lasso
@@ -54,18 +55,23 @@ lambdas = np.asarray(np.hstack([np.asarray([0]),np.logspace(-3,-1,11)]), dtype =
 n_neighbors = 100
 n_components = 3 #number of embedding dimensions (diffusion maps)
 diffusion_time = .50 #diffusion time controls gaussian kernel radius per gradients paper
-dim = 4 #manifold dimension
-dimnoise = 4 #noise dimension
+dim = 2 #manifold dimension
+dimnoise = 2 #noise dimension
 cores = 16 #number of cores for parallel processing
 ii = np.asarray([0,0,0,0,1,1,1,2]) # atom adjacencies for dihedral angle computation
 jj = np.asarray([1,2,3,4,5,6,7,8])
 #run experiment
 #atoms4 = np.asarray([[9,0,1,2],[0,1,2,3],[1,2,3,4],[2,3,4,5],[3,4,5,6],[4,5,6,1],[5,6,1,0]],dtype = int)
 atoms4 = np.asarray([[6,1,0,4],[4,0,2,8],[7,6,5,1],[3,0,2,4]],dtype = int)
-folder = workingdirectory + '/Figures/ethanol/' + now
+folder = workingdirectory + '/Figures/ethanol/dim2' + now
 os.mkdir(folder)
 
+
 new_MN = True
+src = workingdirectory + '/codes/experiments/ethanolpca_multirun_tangent_2.py'
+filenamescript = folder + '/script.py'
+copyfile(src, filenamescript)
+
 new_grad = True
 savename = 'ethanol_052820'
 savefolder = 'ethanol'
@@ -130,7 +136,6 @@ for i in range(nreps):
 with open(folder + '/replicates' + savename + '.pkl','wb') as output:
     pickle.dump(replicates, output, pickle.HIGHEST_PROTOCOL)
 #
-# from shutil import copyfile
-# src = workingdirectory + '/codes/experiments/ethanolpca_multirun_tangent_2.py'
-# copyfile(src, filenamescript)
-#
+
+
+
