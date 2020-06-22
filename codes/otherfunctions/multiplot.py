@@ -1111,11 +1111,11 @@ def highlight_cell(x,y, ax=None, **kwargs):
     return rect
 
 
-def plot_gs_v_dgnorm(experiment, replicates):
+def plot_gs_v_dgnorm(experiment, replicates, axes):
     p = experiment.p
     nreps = experiment.nreps
 
-    fig, axes = plt.subplots(nreps, p, figsize=(15 * p, 15 * nreps))
+
     for r in range(nreps):
         torsion_norm_vec = np.linalg.norm(replicates[r].dgw_norm[:, :, :], axis=2)
         realgs = experiment.get_g_full(experiment.M.data[replicates[r].selected_points])

@@ -64,7 +64,7 @@ class RigidEthanolPCA(AtomicRegression):
         cores = self.cores
         atoms3 = self.atoms3
         dim = self.dim
-        noise = self.noise
+        #noise = self.noise
 
         positions = np.zeros((n, 9, 3))
         # positions[0,0,:] = np.asarray([0.,0.,0.])

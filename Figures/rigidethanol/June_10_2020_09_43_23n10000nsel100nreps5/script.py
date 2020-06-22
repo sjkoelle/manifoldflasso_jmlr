@@ -68,7 +68,7 @@ jj = np.asarray([1,2,3,4,5,6,7,8])
 
 #run experiment
 atoms4 = np.asarray([[6,1,0,4],[4,0,2,8],[7,6,5,1],[3,0,2,4]],dtype = int)
-nreps = 25
+nreps = 5
 lambda_max = 1
 max_search = 30
 
@@ -81,10 +81,10 @@ copyfile(src, filenamescript)
 
 new_MN = True
 new_grad = True
-savename = 'rigidethanol_062320'
+savename = 'rigidethanol_032520'
 savefolder = 'rigidethanol'
 loadfolder = 'rigidethanol'
-loadname = 'rigidethanol_062320'
+loadname = 'rigidethanol_032520'
 if new_MN == True:
     experiment = RigidEthanolPCA(dim, cor, var, ii, jj, cores, False, atoms4)
     experiment.M, experiment.Mpca, projector = experiment.generate_data(noise=True)
@@ -139,7 +139,7 @@ supports = {}
 for i in range(nreps):
     supports[i] = get_support(replicates[i].coeffs, dim)
 
-fig, ax = plt.subplots(1, figsize=(15 , 15 ))
+fig, ax = plt.figure(figsize=(15 , 15 ))
 plot_support_2d(supports, experiment.p)
 fig.savefig(folder + '/flasso_support')
 
@@ -162,15 +162,13 @@ for r in range(nreps):
     highlight_cell(supports_brute[r][0],supports_brute[r][1],color="limegreen", linewidth=3,ax=axes_all[r])
 fig.savefig(folder + '/olsnorms')
 
-fig, ax = plt.subplots(1, figsize=(15 , 15 ))
+fig, ax = plt.figure(figsize=(15 , 15 ))
 plot_support_2d(supports_brute, experiment.p)
 fig.savefig(folder + '/ols_supports')
-plt.close()
 
-fig, axes = plt.subplots(nreps, p, figsize=(15 * p, 15 * nreps))
-plot_gs_v_dgnorm(experiment,replicates,axes)
+plot_gs_v_dgnorm(experiment,replicates)
 fig.savefig(folder + '/gs_v_dgnorm.png')
 
 plot_dot_distributions(experiment,replicates)
-#fig.savefig(folder + '/dotdistribution.png')
+fig.savefig(folder + '/gs_v_dgnorm.png')
 
