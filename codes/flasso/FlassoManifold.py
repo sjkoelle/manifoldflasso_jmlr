@@ -1,5 +1,6 @@
 import autograd.numpy as np
 from codes.flasso.FlassoExperiment import FlassoExperiment
+from sklearn.linear_model import LinearRegression
 
 class FlassoManifold(FlassoExperiment):
     """
@@ -46,6 +47,56 @@ class FlassoManifold(FlassoExperiment):
             dg_M[i] = np.matmul(tangent_bases[i].transpose(), vectors[i].transpose()).transpose()
         return(dg_M)
 
+    # def get_dF_js_idM(self, M, N, M_tangent_bundle_sub, N_tangent_bundle, selectedpoints, dim = None):
+    #
+    #     if dim == None:
+    #         dim = self.dim
+    #     q = self.q
+    #     affinity_matrix = M.geom.affinity_matrix
+    #
+    #     nsel = len(selectedpoints)
+    #     dF = np.zeros((nsel, dim, q))
+    #
+    #     for i in range(nsel):
+    #         pt = selectedpoints[i]
+    #         neighborspt = affinity_matrix[selectedpoints[i]].indices
+    #         deltap0 = M.data[neighborspt, :] - M.data[pt, :]
+    #         deltaq0 = N.data[neighborspt, :] - N.data[pt, :]
+    #         projected_M = np.matmul(M_tangent_bundle_sub.tangent_bases[i, :, :].transpose(),
+    #                                 deltap0.transpose()).transpose()
+    #         # projected_rescaled_M = np.matmul(np.diag(M_tangent_bundle_sub.rmetric.Gsvals[selectedpoints[i]]),projected_M.transpose())
+    #         projected_rescaled_M = projected_M.transpose()
+    #         b = np.linalg.pinv(projected_rescaled_M)
+    #         a = np.zeros((len(neighborspt), q))
+    #         rescaled_basis = np.matmul(N_tangent_bundle.tangent_bases[selectedpoints[i], :, :][:, :],
+    #                                    np.diag(N.geom.rmetric.Gsvals[selectedpoints[i]][:dim]))
+    #         projected_N = np.dot(rescaled_basis.transpose(), deltaq0.transpose())
+    #         projected_N_expanded = np.matmul(N_tangent_bundle.tangent_bases[selectedpoints[i], :, :][:, :], projected_N)
+    #         a = projected_N_expanded
+    #         dF[i, :, :][:, :] = np.matmul(a, b).transpose()
+    #     return (dF)
+
+    # def get_dF_js_idM(self, M, N, M_tangent_bundle_sub, N_tangent_bundle, selectedpoints, dim = None):
+    #
+    #     if dim == None:
+    #         dim = self.dim
+    #     q = self.q
+    #     affinity_matrix = M.geom.affinity_matrix
+    #
+    #     nsel = len(selectedpoints)
+    #     dF = np.zeros((nsel, dim, q))
+    #
+    #     for i in range(nsel):
+    #         pt = selectedpoints[i]
+    #         neighborspt = affinity_matrix[selectedpoints[i]].indices
+    #         deltap0 = M.data[neighborspt, :] - M.data[pt, :]
+    #         deltaq0 = N.data[neighborspt, :] - N.data[pt, :]
+    #         projected_M = np.matmul(M_tangent_bundle_sub.tangent_bases[i, :, :].transpose(),
+    #                                 deltap0.transpose()).transpose()
+    #         dF[i, :, :][:, :] = np.linalg.lstsq(projected_M, deltaq0)[0]#np.matmul(a, b).transpose()
+    #     return (dF)
+
+
     def get_dF_js_idM(self, M, N, M_tangent_bundle_sub, N_tangent_bundle, selectedpoints, dim = None):
 
         if dim == None:
@@ -72,9 +123,17 @@ class FlassoManifold(FlassoExperiment):
             # projected_N = np.dot(rescaled_basis.transpose(), deltaq0.transpose())
             # projected_N_expanded = np.matmul(N_tangent_bundle.tangent_bases[selectedpoints[i], :, :][:, :], projected_N)
             # a = projected_N_expanded
+<<<<<<< HEAD
             # dF[i, :, :][:, :] = np.matmul(a, b).transpose()
             dF[i, :, :][:, :] = np.linalg.lstsq(projected_M, deltaq0)[0]
+=======
+            lr = LinearRegression()
+            weights = affinity_matrix[selectedpoints[i]].data
+            lr.fit(projected_M, deltaq0, weights)
+            dF[i, :, :][:, :] = lr.coef_.transpose()#np.linalg.lstsq(projected_M, deltaq0)[0]#np.matmul(a, b).transpose()
+>>>>>>> d5e8a223f71d64f08bb39abcdfceb88e8b518c56
         return (dF)
+
 
     def get_central_point(self, nsel, fitmodel, data):
         centralpoint = np.zeros(nsel)

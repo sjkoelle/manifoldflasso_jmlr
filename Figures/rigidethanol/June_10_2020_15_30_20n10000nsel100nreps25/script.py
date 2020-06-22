@@ -81,10 +81,10 @@ copyfile(src, filenamescript)
 
 new_MN = True
 new_grad = True
-savename = 'rigidethanol_062320'
+savename = 'rigidethanol_032520'
 savefolder = 'rigidethanol'
 loadfolder = 'rigidethanol'
-loadname = 'rigidethanol_062320'
+loadname = 'rigidethanol_032520'
 if new_MN == True:
     experiment = RigidEthanolPCA(dim, cor, var, ii, jj, cores, False, atoms4)
     experiment.M, experiment.Mpca, projector = experiment.generate_data(noise=True)
@@ -135,11 +135,6 @@ for i in range(nreps):
     plot_reg_path_ax_lambdasearch(axes_all[i], replicates[i].coeffs, replicates[i].lambdas_plot * np.sqrt(m * nsel), fig)
 fig.savefig(folder + '/beta_paths')
 
-with open(workingdirectory + '/untracked_data/embeddings/' + savefolder + '/' + savename + 'replicates_fix.pkl' ,
-         'wb') as output:
-     pickle.dump(replicates, output, pickle.HIGHEST_PROTOCOL)
-
-
 supports = {}
 for i in range(nreps):
     supports[i] = get_support(replicates[i].coeffs, dim)
@@ -178,51 +173,4 @@ fig.savefig(folder + '/gs_v_dgnorm.png')
 
 plot_dot_distributions(experiment,replicates)
 #fig.savefig(folder + '/dotdistribution.png')
-
-
-# fig, axes_all = plt.subplots(nreps, m + 1,figsize=(15 * m, 15*nreps))
-# fig.suptitle('Regularization paths')
-# for i in range(nreps):
-#     replicates[i].coeffs, replicates[i].lambdas_plot = get_coeffs_and_lambdas(replicates[i].coeff_dict, replicates[i].lower_lambda, replicates[i].higher_lambda)
-#     plot_reg_path_ax_lambdasearch(axes_all[i], replicates[i].coeffs, replicates[i].lambdas_plot * np.sqrt(m * nsel), fig)
-# fig.savefig(folder + '/beta_paths')
-
-# supports = {}
-# for i in range(nreps):
-#     supports[i] = get_support(replicates[i].coeffs, dim)
-
-# fig, ax = plt.subplots(figsize=(15 , 15 ))
-# #fig, ax = plt.figure(figsize=(15 , 15 ))
-# plot_support_2d(supports, experiment.p)
-# fig.savefig(folder + '/flasso_support')
-
-# fig, axes_all = plt.subplots(nreps,figsize=(15*nreps,15))
-# fig.suptitle('Cosines for each replicate')
-# for i in range(nreps):
-#     full = np.concatenate([replicates[i].dg_M, np.swapaxes(replicates[i].df_M,1,2)],1)
-#     asdf = get_cosines(full)
-#     axes_all[i].imshow(asdf)
-# fig.savefig(folder + '/cosines')
-
-# ols_norm, supports_brute = get_olsnorm_and_supportsbrute(experiment,replicates)
-
-
-# fig, axes_all = plt.subplots(nreps,figsize=(15*nreps,15))
-# fig.suptitle('GL norm for different OLS solutions')
-# for r in range(nreps):
-#     axes_all[r].imshow(np.log(ols_norm[r]))
-#     highlight_cell(supports_brute[r][1],supports_brute[r][0],color="limegreen", linewidth=3,ax=axes_all[r])
-#     highlight_cell(supports_brute[r][0],supports_brute[r][1],color="limegreen", linewidth=3,ax=axes_all[r])
-# fig.savefig(folder + '/olsnorms')
-
-# fig, ax = plt.subplots(figsize=(15 , 15 ))
-# #fig, ax = plt.figure(figsize=(15 , 15 ))
-# plot_support_2d(supports_brute, experiment.p)
-# fig.savefig(folder + '/ols_supports')
-
-# plot_gs_v_dgnorm(experiment,replicates)
-# fig.savefig(folder + '/gs_v_dgnorm.png')
-
-# plot_dot_distributions(experiment,replicates)
-# fig.savefig(folder + '/gs_v_dgnorm.png')
 
