@@ -53,17 +53,17 @@ tol = 1e-10 #convergence criteria for lasso
 lambdas = np.asarray(np.hstack([np.asarray([0]),np.logspace(-3,-1,11)]), dtype = np.float16)
 #lambdas = np.asarray([0,1,2,3,4,5,6,7,8,9,10], dtype = np.float16)
 n_neighbors = 100
-n_components = 3 #number of embedding dimensions (diffusion maps)
+n_components = 4#number of embedding dimensions (diffusion maps)
 diffusion_time = .50 #diffusion time controls gaussian kernel radius per gradients paper
-dim = 2 #manifold dimension
-dimnoise = 2 #noise dimension
+dim = 4 #manifold dimension
+dimnoise = 4 #noise dimension
 cores = 16 #number of cores for parallel processing
 ii = np.asarray([0,0,0,0,1,1,1,2]) # atom adjacencies for dihedral angle computation
 jj = np.asarray([1,2,3,4,5,6,7,8])
 #run experiment
 #atoms4 = np.asarray([[9,0,1,2],[0,1,2,3],[1,2,3,4],[2,3,4,5],[3,4,5,6],[4,5,6,1],[5,6,1,0]],dtype = int)
 atoms4 = np.asarray([[6,1,0,4],[4,0,2,8],[7,6,5,1],[3,0,2,4]],dtype = int)
-folder = workingdirectory + '/Figures/ethanol/dim2' + now
+folder = workingdirectory + '/Figures/ethanol/dim4' + now
 os.mkdir(folder)
 
 
@@ -73,10 +73,10 @@ filenamescript = folder + '/script.py'
 copyfile(src, filenamescript)
 
 new_grad = True
-savename = 'ethanol_052820'
+savename = 'ethanol_052820_dim4'
 savefolder = 'ethanol'
 loadfolder = 'ethanol'
-loadname = 'ethanol_052820'
+loadname = 'ethanol_052820_dim4'
 nreps = 25
 atoms4,p = get_atoms_4(9,ii,jj)
 if new_MN == True:
@@ -116,12 +116,12 @@ for i in range(nreps):
     replicates[i].selected_points = selected_points
     replicates[i].df_M,replicates[i].dg_M,replicates[i].dg_w ,replicates[i].dg_w_pca ,replicates[i].dgw_norm  = get_grads_tangent(experiment, experiment.Mpca, experiment.M, selected_points, False)
     replicates[i].xtrain, replicates[i].groups = experiment.construct_X(replicates[i].dg_M)
-    replicates[i].ytrain = experiment.construct_Y(replicates[i].df_M,list(range(nsel)))
+    replicates[i].ytrain = experiment.construct_Y(replicates[i].df_M)
     replicates[i].coeff_dict = {}
     replicates[i].coeff_dict[0] = experiment.get_betas_spam2(replicates[i].xtrain, replicates[i].ytrain, replicates[i].groups, np.asarray([0]), nsel, experiment.dim, itermax, tol)
     replicates[i].combined_norms = {}
     replicates[i].combined_norms[0] = np.linalg.norm(np.linalg.norm(replicates[i].coeff_dict[0][:, :, :, :], axis=2), axis=1)[0,:]
-    replicates[i].higher_lambda,replicates[i].coeff_dict,replicates[i].combined_norms = get_support_recovery_lambda(experiment, replicates[i],  lambda_max, max_search,dim)
+    replicates[i].higher_lambda,replicates[i].coeff_dict,replicates[i].combined_norms = get_support_recovery_lambda(experiment, replicates[i],  lambda_max, max_search,2) #dim 2... should use dim dnoise but too busy
     replicates[i].lower_lambda,replicates[i].coeff_dict,replicates[i].combined_norms = get_lower_interesting_lambda(experiment, replicates[i],  lambda_max, max_search)
     #= experiment.get_betas_spam2(replicates[i].xtrain, replicates[i].ytrain, replicates[i].groups, lambdas, len(selected_points), n_embedding_coordinates, itermax, tol)
 

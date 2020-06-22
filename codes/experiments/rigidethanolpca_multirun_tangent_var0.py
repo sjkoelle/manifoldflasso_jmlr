@@ -56,27 +56,27 @@ n_components = 3 #number of embedding dimensions (diffusion maps)
 #diffusion_time = 1. #diffusion time controls gaussian kernel radius per gradients paper
 #diffusion_time =.05 #(yuchia suggestion)
 diffusion_time =.25 #(yuchia suggestion)
-dim = 2 #manifold dimension
-dimnoise = 2
+dim = 4#manifold dimension
+dimnoise = 4
 cores = 3 #number of cores for parallel processing
 cor = 0.0 #correlation for noise
-var = 0.00001 #variance scaler for noise
+var = 0.0001 #variance scaler for noise
 ii = np.asarray([0,0,0,0,1,1,1,2]) # atom adjacencies for dihedral angle computation
 jj = np.asarray([1,2,3,4,5,6,7,8])
 
 #run experiment
 atoms4 = np.asarray([[6,1,0,4],[4,0,2,8],[7,6,5,1],[3,0,2,4]],dtype = int)
 
-m = 3
+m = 4
 new_MN = True
 new_grad = True
-savename = 'rigidethanol_032520'
+savename = 'rigidethanol_032520_2_p0001'
 savefolder = 'rigidethanol'
 loadfolder = 'rigidethanol'
-loadname = 'rigidethanol_032520'
+loadname = 'rigidethanol_032520_2_p0001'
 nreps = 25
 atoms4,p = get_atoms_4(9,ii,jj)
-folder = workingdirectory + '/Figures/rigidethanol/dim2' + now + 'n' + str(n) + 'nsel' + str(nsel) + 'nreps' + str(nreps)
+folder = workingdirectory + '/Figures/rigidethanol/dim4p0001' + now + 'n' + str(n) + 'nsel' + str(nsel) + 'nreps' + str(nreps)
 os.mkdir(folder)
 
 src = workingdirectory + '/codes/experiments/rigidethanolpca_multirun_tangent_var0.py'
@@ -121,12 +121,12 @@ for i in range(nreps):
     replicates[i].selected_points = selected_points
     replicates[i].df_M,replicates[i].dg_M,replicates[i].dg_w ,replicates[i].dg_w_pca ,replicates[i].dgw_norm  = get_grads_tangent(experiment, experiment.Mpca, experiment.M, selected_points, False)
     replicates[i].xtrain, replicates[i].groups = experiment.construct_X(replicates[i].dg_M)
-    replicates[i].ytrain = experiment.construct_Y(replicates[i].df_M,list(range(nsel)))
+    replicates[i].ytrain = experiment.construct_Y(replicates[i].df_M)
     replicates[i].coeff_dict = {}
     replicates[i].coeff_dict[0] = experiment.get_betas_spam2(replicates[i].xtrain, replicates[i].ytrain, replicates[i].groups, np.asarray([0]), nsel, experiment.dim, itermax, tol)
     replicates[i].combined_norms = {}
     replicates[i].combined_norms[0] = np.linalg.norm(np.linalg.norm(replicates[i].coeff_dict[0][:, :, :, :], axis=2), axis=1)[0,:]
-    replicates[i].higher_lambda,replicates[i].coeff_dict,replicates[i].combined_norms = get_support_recovery_lambda(experiment, replicates[i],  lambda_max, max_search,dim)
+    replicates[i].higher_lambda,replicates[i].coeff_dict,replicates[i].combined_norms = get_support_recovery_lambda(experiment, replicates[i],  lambda_max, max_search,2)
     replicates[i].lower_lambda,replicates[i].coeff_dict,replicates[i].combined_norms = get_lower_interesting_lambda(experiment, replicates[i],  lambda_max, max_search)
     #= experiment.get_betas_spam2(replicates[i].xtrain, replicates[i].ytrain, replicates[i].groups, lambdas, len(selected_points), n_embedding_coordinates, itermax, tol)
 

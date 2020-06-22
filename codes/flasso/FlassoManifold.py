@@ -64,15 +64,16 @@ class FlassoManifold(FlassoExperiment):
             projected_M = np.matmul(M_tangent_bundle_sub.tangent_bases[i, :, :].transpose(),
                                     deltap0.transpose()).transpose()
             # projected_rescaled_M = np.matmul(np.diag(M_tangent_bundle_sub.rmetric.Gsvals[selectedpoints[i]]),projected_M.transpose())
-            projected_rescaled_M = projected_M.transpose()
-            b = np.linalg.pinv(projected_rescaled_M)
-            a = np.zeros((len(neighborspt), q))
-            rescaled_basis = np.matmul(N_tangent_bundle.tangent_bases[selectedpoints[i], :, :][:, :],
-                                       np.diag(N.geom.rmetric.Gsvals[selectedpoints[i]][:dim]))
-            projected_N = np.dot(rescaled_basis.transpose(), deltaq0.transpose())
-            projected_N_expanded = np.matmul(N_tangent_bundle.tangent_bases[selectedpoints[i], :, :][:, :], projected_N)
-            a = projected_N_expanded
-            dF[i, :, :][:, :] = np.matmul(a, b).transpose()
+            # projected_rescaled_M = projected_M.transpose()
+            # b = np.linalg.pinv(projected_rescaled_M)
+            # a = np.zeros((len(neighborspt), q))
+            # rescaled_basis = np.matmul(N_tangent_bundle.tangent_bases[selectedpoints[i], :, :][:, :],
+            #                            np.diag(N.geom.rmetric.Gsvals[selectedpoints[i]][:dim]))
+            # projected_N = np.dot(rescaled_basis.transpose(), deltaq0.transpose())
+            # projected_N_expanded = np.matmul(N_tangent_bundle.tangent_bases[selectedpoints[i], :, :][:, :], projected_N)
+            # a = projected_N_expanded
+            # dF[i, :, :][:, :] = np.matmul(a, b).transpose()
+            dF[i, :, :][:, :] = np.linalg.lstsq(projected_M, deltaq0)[0]
         return (dF)
 
     def get_central_point(self, nsel, fitmodel, data):
