@@ -140,6 +140,13 @@ for i in range(nreps):
     plot_reg_path_ax_lambdasearch(axes_all[i], replicates[i].coeffs, replicates[i].lambdas_plot * np.sqrt(m * nsel), fig)
 fig.savefig(folder + '/beta_paths')
 
+
+with open(workingdirectory +
+        '/untracked_data/embeddings/' + savefolder + '/' + savename + 'replicates.pkl' ,
+        'wb') as output:
+    pickle.dump(replicates, output, pickle.HIGHEST_PROTOCOL)
+
+
 supports = {}
 for i in range(nreps):
     supports[i] = get_support(replicates[i].coeffs, dim)
@@ -173,7 +180,8 @@ fig, ax = plt.subplots(figsize=(15 , 15 ))
 plot_support_2d(supports_brute, experiment.p)
 fig.savefig(folder + '/ols_supports')
 
-plot_gs_v_dgnorm(experiment,replicates)
+fig, axes = plt.subplots(nreps, p, figsize=(15 * p, 15 * nreps))
+plot_gs_v_dgnorm(experiment,replicates,axes)
 fig.savefig(folder + '/gs_v_dgnorm.png')
 
 plot_dot_distributions(experiment,replicates)

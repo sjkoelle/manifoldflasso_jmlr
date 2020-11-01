@@ -29,8 +29,8 @@ sys.path.append(workingdirectory)
 os.chdir(workingdirectory)
 from codes.otherfunctions.multiplot import highlight_cell
 from codes.experimentclasses.TolueneAngles import TolueneAngles
-from codes.otherfunctions.multirun import get_coeffs_reps
-from codes.otherfunctions.multirun import get_grads_reps_pca2
+#from codes.otherfunctions.multirun import get_coeffs_reps
+#from codes.otherfunctions.multirun import get_grads_reps_pca2
 from codes.otherfunctions.multiplot import plot_betas, plot_betas2reorder
 from codes.geometer.RiemannianManifold import RiemannianManifold
 from codes.otherfunctions.get_dictionaries import get_atoms_4
@@ -141,14 +141,21 @@ for i in range(nreps):
     plot_reg_path_ax_lambdasearch(axes_all[i], replicates[i].coeffs, replicates[i].lambdas_plot * np.sqrt(m * nsel), fig)
 fig.savefig(folder + '/beta_paths')
 
+print(workingdirectory +
+        '/untracked_data/embeddings/' + savefolder + '/' + savename + 'replicates.pkl')
+with open(workingdirectory +
+        '/untracked_data/embeddings/' + savefolder + '/' + savename + 'replicates.pkl' ,
+        'wb') as output:
+    pickle.dump(replicates, output, pickle.HIGHEST_PROTOCOL)
 
-supports = {}
-for i in range(nreps):
-    supports[i] = get_support(replicates[i].coeffs, dim)
+print(2+2)
+#supports = {}
+#for i in range(nreps):
+#    supports[i] = get_support(replicates[i].coeffs, dim)
 
-fig, ax = plt.subplots(figsize=(15 , 15 ))
+#fig, ax = plt.subplots(figsize=(15 , 15 ))
 #fig, ax = plt.figure(figsize=(15 , 15 ))
-plot_support_1d(supports, experiment.p)
+#plot_support_1d(supports, experiment.p)
 fig.savefig(folder + '/flasso_support')
 
 
@@ -168,7 +175,8 @@ fig, ax = plt.subplots(figsize=(15 , 15 ))
 plot_support_1d(supports_brute, experiment.p)
 fig.savefig(folder + '/ols_supports')
 
-plot_gs_v_dgnorm(experiment,replicates)
+fig, axes = plt.subplots(nreps, p, figsize=(15 * p, 15 * nreps))
+plot_gs_v_dgnorm(experiment,replicates, axes)
 fig.savefig(folder + '/gs_v_dgnorm.png')
 
 plot_dot_distributions(experiment,replicates)
