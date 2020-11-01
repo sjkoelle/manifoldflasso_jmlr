@@ -1,0 +1,164 @@
+\section{Theoretical results}
+\label{sec:theory}
+
+Here we study the conditions under which $f=h\circ g_S$ can be represented over a dictionary $\G$ that contains $g_S$. Not
+surprisingly, we will show that these are \emph{functional independency}
+conditions of the dictionary.
+
+\subsection{Functional dependency}
+\label{sec:existence}
+
+We first study when a set of functions on an open subset
+$U\subset\mathbb{R}^d$ can be \emph{almost smoothly} represented with a subset of
+functionally independent functions. The following lemma implies that
+if a set of non-full-rank smooth functions has a constant rank in a
+neighborhood, then locally we can choose a
+subset of these functions such that the other functions can be smoothly
+represented by them. This is a direct result from the constant rank
+theorem.
+
+\begin{lemma}[Remark 2 after \cite{Zorich} Theorem 2 in Section 8.6.2]
+Let $f:U\rightarrow \rrr^m$ be a mapping defined in an neighborhood
+$U\subset \rrr^d$ of a point $x\in \rrr^d$. Suppose $f\in C^\ell$, the rank
+of the mapping $f$ is $k$ at every point in $U$, and
+$k<m$. Moreover, assume that the principal minor of order $k$ of the
+matrix $Df$ is not zero at $x$. Then in some neighborhood of $x\in U$ there
+exist $m-k \ C^\ell$ functions $g_i,i=k+1,\cdots,m$ such that
+\begin{equation}
+ 	f_i(x_1,x_2,\cdots,x_d) = g_i(f_1(x_1,x_2,\cdots,x_d),f_2(x_1,x_2,\cdots,x_d),\cdots,f_k(x_1,x_2,\cdots,x_d)).
+ \end{equation} 
+ \label{lem:representation}
+\end{lemma}
+
+Applying this lemma we can construct a local representation of a
+subset in $g_S$. The following classical result in differential
+geometry enables us to expand the above lemma from local to global.
+
+We start with the definition. A {\em smooth partition of unity subordinate to $\{U_\alpha\}$} is an indexed family $(\psi_\alpha)_{\alpha\in A}$ of smooth functions $\psi_\alpha:\mathcal{M}\rightarrow \rrr$ with the following properties:
+\begin{enumerate}[(i)]
+	\item $0\leq \psi_\alpha(\xi)$ for all $\alpha \in A$ and all $\xi\in \mathcal{M}$;
+	\item supp $\psi_\alpha \subset U_\alpha$ for each $\alpha\in A$;
+	\item Every $\xi\in\M$ has a neighborhood that intersects supp $\psi_\alpha$ for only finitely many values of $\alpha$;
+	\item $\sum_{\alpha \in A}\psi_{\alpha}(\xi)=1$ for all $\xi\in \M$.
+\end{enumerate}
+
+
+\begin{lemma}[\cite{smoothmfd} Theorem 2.23]
+Suppose that $\M$ is a smooth manifold, and $\{U_\alpha\}_{\alpha\in A}$ is any indexed open cover of $\M$. Then there exists a {smooth} partition of unity subordinate to $\{U_\alpha\}$.
+\label{lem:partition}
+\end{lemma}
+
+Now we state our main results.
+\begin{theorem}\label{thm:uni} Assume $\mathcal{G}=\{g_i\}_{i=1}^p$ is the dictionary where $g_{1:p}$ are $C^\ell$ functions in an open set $U \subset \mathbb{R}^d$. For a subset $S\subset[p]$, the notation $g_S$ is a collection of functions in $\mathcal{G}$.  Then let $S'\subset [p],S'\neq S,|S'| < d$ be another subset of $C^\ell$ functions that are full rank at a point.  Suppose that $\ell\geq d+1$. Then there exists a function $\tau:\rrr^{|S'|}\rightarrow \rrr^{|S|}$ that is almost everywhere $C^\ell$ on the range of $g_{S'}$, w.r.t. Lebesgue measure on $\rrr^{|S'|}$, such that $g_S = \tau \circ g_{S'}$ if
+\begin{equation} \label{eq:rank}
+	\rank\begin{pmatrix} D{g_S} \\ D{g_{S'}} \end{pmatrix} = \rank D{g_{S'}} \ \text{on} \ U
+\end{equation}
+holds globally. If  $\tau$ is smooth everywhere on the range of $g_{S'}$, then $\eqref{eq:rank}$ holds globally.
+\end{theorem}
+{\bf Proof} 
+First, we show the existence of $\tau$.
+Consider $U=U_1\cup U_2$, where $U_1:=\{x: \rank Dg_{S'} = |S'|\}$, and $U_2 = U-U_1$.  $U_1$ is not empty by the assumption. Note that we can select an $|S'|\times |S'|$ submatrix $A_{S',\xi}$ in $Dg_{S'}$ and $\det A_{S',\xi}$ is a continuous function (and thus nonzero) in a neighborhood. This shows that $U_1$ is a nonempty open set. Locally, $g_{S'}$ is a diffeomorphism to its image; therefore $g_{S'}(U_1)$ contains an interior point, and thus has positive measure in $\rrr^{|S'|}$. From Sard's theorem \citep{smoothmfd}, we know that the range of $g_{S'}(U_2)$ is of Lebesgue measure zero in $\rrr^{|S'|}$. Therefore it suffices to show that there exists a $\tau\in C^\ell$ on $g(U_1)$, and we can define arbitrary value for $\tau$ on $g(U_2)$. To simplify the notation we use $U$ to denote $U_1$ in the following proof. By definition of $U_1$, we know that $g_{S'}$ is a diffeomorphism between $U$ and $g_{S'}(U)$. So the inverse $g_{S'}^{-1}$ is well defined and $C^\ell$. Also denote $s=|S|$ and $s'=|S'|$.
+Let
+\begin{equation}
+	g_{S'\sqcup S}(\xi) = \begin{pmatrix}g_{S'}(\xi)\\g_{S}(\xi)\end{pmatrix},
+\end{equation}
+and use $D{g_{S'\sqcup S}}$ to denote the l.h.s. matrix in \eqref{eq:rank}. Here $\sqcup$ means disjoint union. To be specific, we use $g_{j_i}$ to denote the $i-$th function in the collection $[g_{S'};g_S]$
+When the rank of $Dg_{S\sqcup S'}$ equals the rank of $D_{g_{S'}}$,
+Lemma \ref{lem:representation} implies that there exists some
+neighborhood $U_x\in\rrr^d$ of $x$ and $C^\ell$ functions
+$\tau_x^i:\rrr^{|S'|}\rightarrow \rrr,i=s'+1,s'+2,\cdots,s'+s$ such that
+\begin{equation}
+	g_{j_i}(\xi) = \tau_x^i(g_{j_1}(\xi),\cdots,g_{j_{s'}}(\xi)),\ \text{for} \ i=s'+1,s'+2,\cdots,s'+s, \ \xi\in U_x.
+\end{equation}
+Here we should notice that $\tau_x^i$ is defined only on $g_S(U_x)$. Since this holds for every $x\in U$, we can find an open cover $\{U_x\}$ of the original open set $U$. Since each open set in $\rrr^d$ is a manifold, the result of partition of unity in Lemma \ref{lem:partition} holds, namely that $U$ admits a smooth partition of unity subordinate to the cover $\{U_x\}$. We denote this partition of unity by $\psi_x(\cdot)$.
+\par
+Hence we can define 
+\begin{equation}
+\tau^i(y) = \sum_{x\in U} \psi_x(g_{S'}^{-1}(y))\tau_{x}^i(g_{S'}(y)),\quad y\in g_{S'}(U).
+\end{equation}
+where $\tau^i$ is a function mapping from $g_{S'}(U)\rightarrow \rrr$.
+For each fixed $x \in U$, the function
+$y\rightarrow \psi_x(g_{S'}^{-1}(y))\tau_x^i(y)$ for $y\in g_{S'}(U)$ is $C^\ell$.  According to the
+properties of partition of unity, in a local neighborhood of each point, this is a summation of finitely many smooth functions.  Then this $\tau^i$ will be a $C^\ell$ function on $g_{S'}(U)$. Also, by $1=\sum_x \psi_x(\xi)$, it holds that $\tau^i(g_{S'}(\xi))=g_{j_i}(\xi)$ for any $i=s'+1,\cdots,s'+s$.
+\par Therefore,
+globally in $U$ we have
+\begin{equation}
+	 g_{S\sqcup S'}^i(\xi) = \tau^i(g_{1}(\xi),\cdots,g_{s'}(\xi)),\ \text{for} \ i=s'+1,s'+2,\cdots,s'+s,\ \xi \in U.
+\end{equation}
+And $g_S(\xi)$ is the concatenation of the last $s$ functions. 
+
+\par Now we prove the reverse implication. If $\rank Dg_{S\sqcup S'}>\rank Dg_{S'}$, then
+there is $j\in S$, so that $Dg_j\not\in \rowrange Dg_{S'}$.  Pick
+$\xi^0\in U$ such that $Dg_j(\xi^0)\neq 0$; such an $\xi^0$ must exist
+because otherwise it will be in $\rowrange Dg_{S'}$. By the theorem's
+assumption, $Dg_{S}=D\tau Dg_{S'}$. This implies that $(Dg_S)^T$ is in
+$\rowrange (Dg_{S'})^T$ for any $\xi$. But this is impossible at
+$\xi^0$. \hfill $\BlackBox$
+\par
+
+This theorem essentially gives a condition for the uniqueness of the explanation. If $S$ is the set found by \ouralg, then checking that there is no subset satisfying the rank condition implies that the explanation is unique in the dictionary. We say that a set of functions $g_S$ on a metric space $X$ is \emph{$C^\ell$ (smooth) functionally dependent} at $\xi$ if there is a subset $S'\subset S,S'\neq S$, a function $\tau:\rrr^{|S'|}\rightarrow \rrr^{|S|}$ and a neighborhood $U$ around $\xi$  such that
+\begin{enumerate}[(i)]
+\item $g_S = \tau \circ g_{S'}$ on $U$;
+\item $\tau$ is $C^{\ell}$ (smooth) globally on $g_{S'}(U)\subset\rrr^{|S'|}$;
+\item $y-\tau (y_{S'})\not\equiv 0$ on any neighborhood $O(g_S(\xi))\subset \rrr^{|S|}$. Here $y=(y_1,\cdots,y_{|S|})\in \rrr^{|S|},y_{S'}=(y_i)_{i\in S'}\subset \rrr^{|S'|}$.
+\end{enumerate}
+$S$ is {\em functionally independent} if it is nowhere functionally dependent. Based on Theorem \ref{thm:uni}, we formulate the rank condition below as a necessary and sufficient condition of functional independence.
+\begin{corollary}[Functional Independence]
+\label{cor:funind}
+Suppose $\mathcal{M}$ is a $d-$dimensional smooth manifold and $g_{S}: \mathcal{M}\rightarrow \rrr^d$ are $d \ C^\ell$ functions. Suppose $g_S(\cal M)$ has a positive measure in $\rrr^d$. Then they are functionally independent on $\mathcal{M}$ iff  $\rank Dg_S(\xi)$ is $d$ everywhere on $\mathcal{M}$ except for a closed subset $W\subset\mathcal{M}$ with no interior point.
+\end{corollary}
+{\bf Proof}
+First we show that the rank condition implies functional independence.
+Suppose $g_S$ is functionally dependent. Then by definition we have that $g_S = \tau \circ g_{S'}$ on a neighborhood for some $S'$ with $|S'| < |S|=d$. Then on this neighborhood $\rank Dg_S \leq \rank Dg_{S'} \leq d-1$. This contradicts the assumption. On the other hand, suppose $Dg_S$ is functionally independent; then for any $\xi$ there is a $\rank Dg_S \times \rank Dg_S$ non-degenerate submatrix of $Dg_S(\xi)$ whose determinant is non-zero. Therefore, by the smoothness of $g_S$, there exists a neighborhood $V_0$ such that this submatrix of the Jacobian is invertible in this neighborhood. Therefore, for any $\xi' \in V_0$ we have that $\rank Dg_S(\xi') \geq \rank Dg_S(\xi)$.
+
+We therefore start from the case where $\rank Dg_S = d-1$. Select functions that are full rank at this point, and denote them by $g_{S'}$. There is a neighborhood $V_1$ of $\xi$ with $\rank g_{S'}(\xi)=d-1$. If $\rank Dg_S  = d-1$ holds on some neighborhood $V_2$ of $\xi$, then after selecting a chart $(U,\varphi)$ containing $V_1\cap V_0$,  we have that
+\begin{equation}
+	\rank\begin{pmatrix} D{g_S\circ \varphi^{-1}} \\ D{g_{S'}\circ \varphi^{-1}} \end{pmatrix} = \rank D{g_{S'}\circ\varphi^{-1}}
+\end{equation}
+holds on $V_2\cap V_1\cap V_0$. Thus, Theorem \ref{thm:uni} implies that $g_S$ cannot be functionally independent (consider a composition with $\varphi$). Therefore, the set $\{x: \rank Dg_S = d-1\}$ has empty interior in $\mathcal{M}$.
+Similarly, in every neighborhood $V_{k}$ of any point where $0\leq \rank Dg_S=k < d-1$, there must be a point such that $\rank Dg_S = k+1$. Then in every neighborhood $V_{k+1}\cap V_{k}$ of this new point there must be a point such that $\rank Dg_S = k+2$.  By induction, there must be a point in $V_k$ such that $\rank Dg_S=d$. Therefore we conclude that the set $W=\{\xi:\rank Dg_S \leq d-1\}$ contains no interior point. Also, it is closed because $\{\xi: \rank Dg_S = d\}$ is open.
+\hfill $\BlackBox$
+
+\paragraph{Remarks} Before we step further, here we make some remarks on functional independence.
+\begin{enumerate}
+\item Our definition of functional independence is slightly different from the classical definition in, for example, \cite{Zorich}.\comment{ for the purpose of interpretation of manifold embedding coordinates explanation.} One can show that our definition implies the classical definition.
+\item Mathematically, in Corollary \ref{cor:funind}, the condition on $W$ does not mean $W$ is measure zero on the manifold $\mathcal{M}$. However, it is quite common that $W$ is measure zero and in this case the functional independence is also guaranteed. This requirement is not hard to satisfy. For example, in the case of one-dimensional $\M$, it is sufficient that the dictionary contain one {\em Morse function}. By the Morse lemma \cite{morse}, a Morse function's critical points are isolated.  Hence the decomposition is valid almost everywhere. 
+\end{enumerate}
+
+With the previous two results, we are ready for Theorem \ref{thm:mfd}, which guarantees the existence of a $d-$function explanation given a good dictionary in the sense of having a functionally independent subset.
+%
+\begin{theorem}
+\label{thm:mfd}
+Let $\mathcal{G}$ and $g_S$ be defined as before. $\mathcal{M}$ is a smooth manifold with dimension $d$ embedded in $\rrr^D$. Suppose that $\psi: \mathcal{M}\subset \rrr^D \rightarrow \rrr^m$ is also an embedding of $\mathcal{M}$ and has a decomposition $\psi(\xi) = h\circ g_S(\xi)$ for every $\xi \in \mathcal{M}$ where $h$ is smooth.
+If the dictionary $g_S$ contains $d$ functions denoted by $g_{S'}$,  that are smooth functionally independent on $\cal M$, then there exists a $\widetilde{h}$ such that $\psi = \widetilde{h}\circ g_{S'}$ on every $\xi \in \mathcal{M}$. Here, the
+function $\widetilde{h}$ is smooth almost everywhere in the range of $g_{S'}$.
+\end{theorem}
+
+{\bf Proof}
+Consider the set $U=\{x: \rank Dg_{S'}=d\}$. It is an open subset of the manifold $\cal M$ and therefore a smooth manifold. For each point $x\in U$, select a local chart $(V,\varphi)$ such that $V\subset U$. With the same argument in the proof of Corollary \ref{cor:funind}, we know that there exists a smooth functions $\tau_x$ on $V$ such that $g_S = \tau \circ g_{S'}$ holds on V. Also, since $V$ is an open neighborhood, we conclude that the measure of $g_{S'}(U)\geq g_{S'}(V)$ should be strictly positive. Therefore the partition of unity technique used in the proof of Theorem \ref{thm:uni} can show that there exists a function $\tau$ on $U$ that is smooth over $g_{S'}(U)$ such that $g_S = \tau \circ g_{S'}$ holds globally on $U$. We can define $\tau$ on $\mathcal{M}\setminus U$ to be anything, and Sard's theorem implies that $g_{S'}(U)$ would be a measure zero set in $\rrr^d$.  Finally, we just write $\widetilde{h}=h\circ \tau $
+\hfill $\BlackBox$
+
+Here we
+assume that a subset of functions with rank $d$ almost everywhere
+exists. In fact, on a compact $d-$dimension manifold $\mathcal{M}$, any smooth function $f:\mathcal{M}\rightarrow \rrr^d$ must have at least one singular point.  Think of function $f\circ \pi_1$ where $\pi_1$ is the projection onto the first coordinate. It must attains its maximum value at some point. Then at that point the gradient of this function is zero and the Jacobian must have a rank less than $d$. This example shows that sometimes there does not exist a function $f:\mathcal{M}\rightarrow \rrr^d$ with constant rank $d$. Similar results to Theorem \ref{thm:uni} hold {\em almost
+everywhere} if the decomposition $f=h\circ g_S$ holds almost
+  everywhere on the manifold $\M$, and the dictionary is smooth on
+$\mathcal{M}$ except for a closed set of measure zero. With this
+weaker assumption, one can, for example, find one function explaining
+the whole circle $S^1$ embedded in $\rrr^2$ except one point.
+\mmp{We can go on from here nicely to say that if $f:\M\rightarrow O\neq \rrr^d$ then it's possible.}
+
+In a finite sample setting, Theorem \ref{thm:uni} states that $S$ and $S'$ are equivalent explanations for $f$ whenever \eqref{eq:rank} holds on open sets around the sample points. For example, Theorem \ref{thm:uni} does not have to hold globally. Suppose we are given a solution subset $S$. The interpretation of this result is that we hope $\phi = h\circ g_{S}$ holds almost everywhere on the manifold, and $h$ is smooth on the image of $g$ of the data points. As stated before, we can assume the dictionary contains $d$ functions with rank $d$ almost everywhere. An intuitive way to satisfy this assumption when constructing the dictionary is to select functions that are not varying with the same trend. One can also conduct a sanity check of the rank condition after we get a solution subset $S$. If they are always full rank on these finite samples, we still get meaningful results.  For low dimensional settings, i.e. when $s\geq d$, the Theorem implies
+that in general there will be many equivalent explanations of $f$ in
+$\G$. Assuming no noise, the solution to (\ref{eq:flasso-manifold}) will be the subset
+$S$ that minimizes the penalty term
+$\frac{\lambda}{\sqrt{mn}}\sum_{j=1}^p\|\beta_j\|$ on the data set. 
+
+Finally, the success of Group Lasso requires stronger assumptions on the dictionary functions. For example, according to \cite{GO2011}, a particular group $S$ will be recovered by Group Lasso methods, if (1) it is close to perpendicular to the linear subspace generated by all other groups (2) Group features in $S$ are close to orthogonal matrix. In our case, if a sparse representation $\phi=h\circ g_S$ is identified from our Group Lasso formulation, the gradients of functions in $S$ should be close to normal to all other functions in the dictionary, and the gradient in $S$ themselves need to be close to orthogonal. Rank conditions and functional independence assumptions only guarantees the existence of a sparse nonlinear representation of the embedding. Only "good" subset of dictionaries can be recovered with guarantee. 
+
+\mmp{sphere in D dimensions, system of spherical coordinates. how does this apply?}
+\mmp{In chem paper, we should discuss how many independent bond torsions can exist, if possible. I'm leaving the calculations below as a reminder. 
+See also Delaunay triang,  simplicial complex or not? ask Sara?
+ for a molecule with $N$ atoms, the number of quadruples of atoms close enough to interact, which is close to $\binom{N}{4}$; for toluene ($N=15$) $p\leq 1365$, for ethanol ($N=9$) $p\leq 126$, and for aspirin ($N=21$), $p\leq 5985$. \mmp{think of decomposable models/treewidth 3/ graphs over edges/ etc to give a condition. Spanning tree sufficient but not necessary. Think of symmetries, same dihedral}}
+
+% this was gradients-nips-proofs.tex

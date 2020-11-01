@@ -1,0 +1,111 @@
+\section{Recovery guarantees for \flasso}
+\label{sec:flassorecovery}
+
+We now give recovery guarantees for the (\flasso) problem. The
+guarantees are deterministic, but they depend on the noise sample
+covariance, hence they can lead to statistical guarantees holding
+w.h.p. in the usual way. The first theorem deals with support recovery, proving that all coefficients outside the support are zeroed out, under conditions that depend only on the dictionary, the true support $S$ and the noise.  The second result completes the previous with error bounds on the estimates $\bhat_j$, assuming an additional condition on the magnitude of the true $\beta_j$ coefficients. Since these coefficients are partial derivatives w.r.t. the dictionary functions, the condition implies that the the dependence on each function must be strong enough to allow the accurate estimation of the partial derivatives.
+
+Introduce the following quantities
+\beq \label{eq:mu}
+\text{$S$-incoherence in $\G$}\quad \mu\;=\;\max_{i=1:n,j\in S,j'\not\in S}|x_{ij}^Tx_{ij'}|\,
+\eeq
+\beq
+\text{noise level $\sigma$ defined by}\quad \sum_{i=1}^n||\epsilon_i||^2=nd\sigma^2,
+\eeq
+and {\em internal colinearity $\nu$}, defined as follows. Let 
+\beq\label{eq:Sigma}
+\Sigma_i\;=\;\left[x_{ij}^Tx_{ij'}\right]_{j,j'\in S}=\;\xb^T_{tS}\xb_{iS},
+\quad 
+\text{and}
+\quad\Sigma\;=\;\diag\{\Sigma_{1:n}\}
+\eeq
+and  denote by $\nu\leq 1$ the maximum eigenvalue of $\Sigma^{-1}$; a smaller $\nu$ means that the $x_{ij}$ gradients are closer to being orthogonal at each datapoint $i$. 
+\begin{theorem}[Support recovery]\label{thm:S} Assume that equation \eqref{} holds, and that $||x_{ij}||=1$ for all $i=1:n,j=1:p$. Denote by $\bbar$ the solution of \eqref{eq:flasso} for some $\lambda>0$.
+If $\mu\nu \sqrt{s}+\frac{\sigma \sqrt{nd}}{\lambda}<1$, then $\bbar_{tj}=0$ for $j\not \in S$.
+\comment{$y_i\;=\;\xb_i\beta_i+w_i\in \rrr^d$ with $E[w_i]=0,Var(w_i)=\sigma^2$.}
+\end{theorem}
+
+{\bf Proof} 
+We structure equation \eqref{eq:} in the form
+\beq
+y\;=\;\barbx \bbar^* +\barw
+\quad\text{with }y=[y_i]_{i=1:n}\in\rrr^{nd},\;
+\bbar=[\beta_i]_{i=1:n}\in\rrr^{np},\;
+\eeq
+$\tilde{X}_{ij}\in\rrr^{nd}$ is obtained from $x_{ij}$ by padding with zeros for the entries not in the $i$-th segment, $\barbx_j=[[\tilde{X}_{tj}]_{j=1:p}]_{i=1:n}\in \rrr^{nd\times np}$, and $\barbx_j=[\tilde{X}_{ij}]_{i=1:n}\in \rrr^{nd\times n}$ collects the colums of $\barbx$ that correspond to the $j$-th dictionary entry. Note that 
+\beq
+\tilde{X}_{tj}^T\tilde{X}_{tj'}\;=\;x_{ij}^Tx_{ij'}
+\quad \text{and} \quad
+\tilde{X}_{tj}^T\tilde{X}_{t'j'}\;=\;0\text{ whenever }t\neq t'.
+\eeq
+The proof is by the {\em Primal Dual Witness} method, following \cite{elyaderani},what was his inspiration}. 
+It can be shown \cite{} that $\bbar$ is a solution to (\flasso) iff, 
+\text{for all $j=1:p$},
+\beq \label{eq:kkt0} 
+\barbx_j^T\barbx(\bbar -\bbar^*)-\barbx_j^T\barw+\lambda z_j\;=\;0\;\in\rrr^n
+\text{ with }z_j=\frac{\beta_j}{||\beta_j||}
+\text{ if }\beta_j\neq 0 \text{ and $||z_j||<1$ otherwise}.
+\eeq
+The matrix $\barbx_j^T\barbx$ is a diagonal matrix with $n$ blocks of size $1\times p$, hence the first term in \eqref{eq:kkt0} becomes 
+\beq
+[ x_{ij}^T\xb_i(\bbar_{i:}-\bbar_{i:}^*)]_{i=1:n}\in \rrr^{n}.
+\eeq
+Similarly $\barbx_j^T\barw=[x_{ij}^Tw_i]_{i=1:n}\in \rrr^n$.
+
+We now consider the solution $\bhat$ to problem \eqref{eq:} (\flasso) under the additional constraint that $\beta_{tj'}=0$ for $j'\not \in S$. In other words, $\bhat$ is the solution we would obtain if $S$ was known. Let $\zhat$ be the optimal dual variable for this problem, and let $\zhat_S=[\zhat_j]_{j\in S}$. 
+
+We will now complete $\zhat_S$ to a $z\in \rrr^{np}$ so that the pair $(\bhat, z)$ satisfies \eqref{eq:kkt0}. If we succeed, then we will have proved that $\bhat$ is the solution to the original \flasso~problem, and in particular that the support of $\bhat$ is included in $S$. 
+
+From \eqref{eq:kkt0} we obtain values for $z_j$ when $j\not \in S$.
+\beq\label{eq:zjcomp}
+z_j\;=\;\frac{-1}{\lambda}\barbx_j^T\left[\barbx^T(\bhat-\bbar^*)-\barw\right].
+\eeq
+In the same time, if we consider all $j\in S$, we obtain from \eqref{eq:kkt0} that $\barbx_S=[\barbx_j]_{j\in S}$ (here the vectors $\beta_S,\beta_S*$ and all other vectors are size $ns$, with entries sorted by $j$, then by $i$). 
+\beq \label{eq:beta-err}
+\barbx_S^T\barbx_S(\bhat_S-\beta_S^*)-\barbx_S^T\barw+\lambda \zhat_S\;=\;0.
+\eeq
+Solving for $\bhat_S-\beta_S^*$ in  \eqref{eq:betaerr}, we obtain
+\beq
+\bhat_S-\beta_S^*\;=\;(\barbx_S^T\barbx_S)^{-1}\left(\barbx_S^T\barw-\lambda \zhat_S\right)\;=\;\Sigma^{-1}\left(\barbx_S^T\barw-\lambda \zhat_S\right).
+\eeq 
+After replacing the above in \eqref{eq:zjcomp} we have
+\beq \label{eq:zj2}
+z_j\;=\;\frac{-1}{\lambda}\barbx_j^T\left[\barbx_S\Sigma^{-1}\barbx^T_Sw-\barbx_S\Sigma^{-1}\lambda \zhat_S-\barw\right]
+\;=\;\barbx_j^T\barbx_S\Sigma^{-1}\zhat_S+\frac{1}{\lambda}\barbx_j^T(I-\barbx_S\Sigma^{-1}\barbx_S^T)\barw.
+\eeq
+Finally, by noting that $\Pi=I-\barbx_S\Sigma^{-1}\barbx_S^T$ is the projection operator on the subspace $\range(\barbx_S)^\perp$, we obtain that 
+\beq \label{eq:zj}
+z_j\;=\;(\barbx_j^T\barbx_S)\Sigma^{-1}\zhat_S+\frac{1}{\lambda}\barbx_j^T\Pi\barw,
+\quad\text{for $j\not\in S$}.
+\eeq
+We must show that $||z_j||<1$ for $j\not\in S$. 
+To bound the first term, we note that $\barbx_j^T\barbx_S$ is $n\times ns$, block diagonal, with blocks of size $1\times s$, and with all non-zero entries bounded in absolute value by $\mu$. Hence, for any vector $v=[v_i]_{i=1:n}\in \rrr^{ns}$, $||\barbx_j^T\barbx_Sv||^2=||[(x^T_{ij}x_{iS})v_i]_{i=1:n}||^2=\sum_{i=1}^n||(x^T_{ij}x_{iS})v_i||^2\leq 2\mu^2\sum_{i=1}^n||v_i||^2=\mu^2||v||^2$. But in our case $v=\Sigma^{-1}\zhat_S$, hence $||v||\leq ||\Sigma^{-1}||||\zhat_S||=\nu\sqrt{s}$. 
+
+To bound the second term, we note that $||\barbx_j||=||x_{ij}||=1$, and that $||\Pi \barw||\leq ||\barw||$ because $\Pi$ is a projection. Hence, the norm squared of this term is bounded above $\sum_{i=1}^n||w_i||^2||x_{ij}||^2/\lambda^2=nd\sigma^2/\lambda^2$. 
+
+Replacing these bounds in \eqref{eq:zj} we obtain that 
+\beq
+||z_j||\leq ||\barbx_j^T\barbx_S\Sigma^{-1}\zhat_S||+||\frac{1}{\lambda}\barbx_j^T\Pi\barw||
+\,\leq\, \mu\nu\sqrt{s}+\frac{\sigma \sqrt{dn}}{\lambda}
+\;\text{for any $j\not \in S$}.
+\eeq
+\hfill$\Box$
+
+\begin{theorem}\label{thm:beta} Assume that equation \eqref{} holds, and that $||x_{ij}||=1$ for all $i=1:n,j=1:p$. Denote by $\bhat$ the solution to problem (\flasso) for some $\lambda>0$. If (1) $\mu\nu \sqrt{s}<1$, (2) $\lambda=(c-1)\sigma\sqrt{dn}$ with $c>1+\frac{1}{1-\mu\nu\sqrt{s}}$, (3) $||\beta_j^*||>c\sigma\sqrt{dn}(1+\sqrt{s})$ for all $j\in S$, then the support $S$ is recovered exactly and $||\bhat_j-\beta^*_j||<c\sigma\sqrt{dn}(1+\sqrt{s})$ for all $j\in S$.
+\end{theorem}
+
+{\bf Proof} According to Theorem \ref{thm:S}, $\bhat_j=0$ for $j\not \in S$. It remains to prove the error bound for $j\in S$. According to Lemma V.2 of \cite{elyaderani:}, for any $j\in S$,
+\beqa
+||\bhat_j-\beta^*_j||
+&\leq &||\barbx_j^T\barw||+||\barbx_S^T\barw||+\lambda(1+\sqrt{s})\\
+&\leq &(||\barbx_j||+||\barbx_S||)||\barw||+\sigma(c-1)\sqrt{dn}(1+\sqrt{s})\\
+&\leq &(1+\sqrt{s})\sigma\sqrt{dn}+\sigma(c-1)\sqrt{dn}(1+\sqrt{s})
+\;=\;c\sigma\sqrt{dn}(1+\sqrt{s})
+\eeqa
+Hence, if $||\beta_j^*||>c\sigma\sqrt{dn}(1+\sqrt{s})$, $\bhat_j\neq 0$ and the support is recovered. 
+\hfill $\Box$
+
+Note that for this value of $c$, $\frac{\sigma\sqrt{dn}}{\lambda}+\mu\nu\sqrt{s}=\frac{1}{c-1}+\mu\nu\sqrt{s}<1$.
+
+The assumptions we make are not probabilistic, while those in \cite{elyaderani,} are. In spite of this difference, the assumptions in our work bear comparison with \cite{}. Specifically, our conditions only concern the internal collinearity, for functions  $j\in S$, while \cite{elyaderani} requires bounds on the {\em intra-block coherence} (the equivalent condition) for the whole dictionary. Second, we only require incoherence between $g_S$ and the functions not in $S$; this property is most similar to the {\em inter-block coherence} bound from \cite{elyaderani}. In other words, we show that incoherence between functions outside the support is not necessary. This conclusion can be extended in a straightforward manner to other group Lasso recovery proofs. 
