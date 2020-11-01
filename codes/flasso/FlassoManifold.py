@@ -120,12 +120,13 @@ class FlassoManifold(FlassoExperiment):
             # a = np.zeros((len(neighborspt), q))
             # rescaled_basis = np.matmul(N_tangent_bundle.tangent_bases[selectedpoints[i], :, :][:, :],
             #                            np.diag(N.geom.rmetric.Gsvals[selectedpoints[i]][:dim]))
-            # projected_N = np.dot(rescaled_basis.transpose(), deltaq0.transpose())
+            projected_N = np.dot(N_tangent_bundle.tangent_bases[selectedpoints[i]].transpose(), deltaq0.transpose())
             # projected_N_expanded = np.matmul(N_tangent_bundle.tangent_bases[selectedpoints[i], :, :][:, :], projected_N)
             # a = projected_N_expanded
             lr = LinearRegression()
             weights = affinity_matrix[selectedpoints[i]].data
-            lr.fit(projected_M, deltaq0, weights)
+            #lr.fit(projected_M, deltaq0, weights)
+            lr.fit(projected_M, projected_N, weights)
             dF[i, :, :][:, :] = lr.coef_.transpose()#np.linalg.lstsq(projected_M, deltaq0)[0]#np.matmul(a, b).transpose()
         return (dF)
 

@@ -1,0 +1,407 @@
+\documentclass[draft]{article}
+\setlength{\topmargin}{-1cm}
+\setlength{\textwidth}{6.0in}
+\setlength{\textheight}{9.0in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{10pt}
+
+\usepackage{natbib}
+% to avoid loading the natbib package, add option nonatbib:
+% \usepackage[nonatbib]{nips_2018}
+
+%\usepackage[backslant]{aurical}       % Fontauri fonts 
+\usepackage{bm}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+%\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{subfig}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{enumerate}
+\usepackage{xcolor}
+%\usepackage{graphicx}
+\usepackage[font=small]{caption}
+%\usepackage[labelformat = empty,position=top]{subcaption}
+\usepackage[export]{adjustbox}
+%\usepackage[]{algorithm2e}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{multirow}
+
+\include{gradients-commands}
+%\newcommand{\skcomment}[1]{}
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{center}
+{\large UNIVERSITY OF WASHINGTON $\bullet$ DEPARTMENT OF STATISTICS}\\
+{\small Box 354322 $\bullet$ SEATTLE, WA 98195-4322 $\bullet$ Phone:
+(206) 543-7237 $\bullet$ Fax: (206) 685-7419} \\
+\end{center}
+
+\vspace{-0.5cm}
+\begin{tabbing}
+{}\` \today  \\
+\end{tabbing}
+
+\vspace{-0.5cm}
+Dear Editor:\\
+
+\vspace{0.5in}
+
+
+We are very appreciative of the reviewer comments.  Thank you.  We are submitting a revised version of {\bf ``Manifold coordinates with physical meaning''} by Samson Koelle, Hanyu Zhang, Marina Meila and Yu-Chia Chen for publication in JMLR.  The following addresses particular comments:
+
+\section{Reviewer 1}
+
+\textbf{\subsection{Summary}
+This paper proposes to study a method to link the coordinates in a learned manifold to a set of function selected in a
+dictionary of physical explanation or measurements that would explain the shape of the manifold. The core idea of the
+paper is to model the manifold as a composition between an unknown function h and these dictionary elements $g_i$
+. Using
+the linearity of the differential maps of a composition, the dictionary elements are selected by solving a regression penalized
+with group sparsity, which output a few elements gi with there gradient links to the gradient of the manifold map. The
+algorithm ? tagged ManifoldLasso ? is based on a group lasso to select dictionary elements to regress the gradient of the
+manifold coordinates. The idea is clearly exposed and the derivation from Riemannian geometry are easy to follow. Then
+the authors show that the representation h ? gS can always be reduce to a case where the family of dictionary element $g_S$
+is functionally independent, justifying the choice of using sparsity prior to select only a few elements from the dictionary.
+Finally, the interest of the method is demonstrated on two toy examples (the swiss roll and a simulated Ethanol trajectory)
+as well as 3 example of molecular dynamics data. The numerical examples show that relevant dictionary elements are
+selected by the proposed technique, as the norm of the activation vector ?k are clearly different from unrelated dictionary
+elements, in examples where the authors know what are the correct elements to select.
+\subsection{Overall assessment}
+Overall, I find the ideas developed in this manuscript to be very interesting and original. The application to molecular
+dynamic illustrate very well the objective of this paper and makes it easy to follow the developed arguments. The method is
+describe in a comprehensive way. However, I think that both the theoretical contribution as well as the empirical evaluation
+could be improved before publication. In particular, the theoretical results give little insight on the identifiability or the
+effectiveness of the method. The results shows that looking for a solution with a low number of functionally independent
+elements make sense but there is no insights on the uniqueness of the solution as well as on the fact that ManifoldLasso
+could find such solution. Moreover, the empirical results are mainly applied to example where there don?t seem to be
+any ambiguity to select the dictionary elements, and the choice could easily be made manually by the practitioner. I
+suggest rejection of this manuscript but I encourage the authors to resubmit after reinforcing there results, in particular
+by highlighting the limitation of their approach.}
+
+We thank the reviewer for their comments and find their summary to be accurate.  We have incorporated the above suggestions, and respond in detail in the following section.
+
+\textbf{\subsection{Question and comments}
+\subsubsection{Naming for dictionary elements}
+I find the description and naming of the dictionary of user-defined
+and domain-related smooth functions quite hard to understand and it took me some time to parse it. In my understanding,
+these functions seem to take as input a configuration from the original space and output a scalar, so they are some kind
+of physical measurement functions. For the example with molecular dynamic, these functions measure the angle between
+some molecules. So it might be interesting to call them measurement functions or measurements. The goal of the paper
+would then be to relate some physical measurements in the input space to explain the shape of the manifold. This is only
+a semantic change but it would clarify the goal and the wording in my opinion.}
+
+While we appreciate the reviewer's suggestion, we continue to utilize the term dictionary, as is standard in the context of sparse dictionary learning, where a low-dimensional representation of a data set is selected from a set of functions of the original space.
+
+\textbf{\subsubsection{Code available (p.15):}
+ The code is available online but hard to run as there is no indication on how to use it. It is necessary to at least add a README file to indicate which script can reproduce which figure, so the reader can try and reproduce the results. Also, there is no file to list the requirements so it is very hard to install. Finally, the Python package is broken (missing init .py files). I tried to run the swiss roll example, but I was not able to make it run in reasonable time. I recommend to the authors to furnish an installation description that allow them to run the code in a new virtual environment by only following such instructions.
+ }
+ 
+ We have clarified the code by adding a README file with instructions for creating a suitable virtual environment and creation of the figures in the paper. We have also adjusted the parameters of swiss roll example to run in a more reasonable amount of time on a laptop computer.
+ 
+ \skcommment{No yml file. okay?}
+ 
+\textbf{
+\subsubsection{Theoretical results (Section.5):}
+I think the theoretical results presented in this paper could be extended. The main result states that if the embedding follow a model $h \circ g_S$, it is possible to find a set $S? \subset S$ such that $g_S?$ is functionally independent and $h \circ g_S = ??h \circ g_S?$ on the manifold M. This justifies the approach of finding a sparse solution as sparser solution will be more functionally independent. This should be better discuss in the text to justify using a group Lasso approach. But then, many question remains open to justify this technique. In particular, there is no discussion about whether or not the ManifoldLasso would select functionally independent components. Also, the uniqueness of the solution proposed by ManifoldLasso is unclear and I think this would improve the case of the paper to discuss it. By better linking this results with the results on support estimation from the preprint version of this article (Meila et al. 2019) and from the literature in Group Lasso support estimation, the results would give better insights on the proposed method. In particular, a discussion about the link between the functional independence of the functions $g_i$ and the support estimation capabilities seem to be possible, as the functional independence seem to be linked to some kind of mutual incoherence between the selected atoms in the support of the solution.
+}
+
+\skcomment{To do: We have added the theoretical results on sufficient conditions for support recovery from Meila 2019.  Recognizing that these are necessary rather than sufficient conditions for support recovery, we also discuss conditions on identifiability.}
+
+\textbf{
+\subsubsection{Link between $\| \beta_{i,k}\|$ and the measurement $g_k$ ? Figure.2/3 (p.17):}
+ As the coordinate system is not included in 2(a) (see Comment 4.16), I might be mistaken but I don?t understand why there is no clear difference between the coefficient for $g_1$ and $g_2$ with the different manifold coordinate $\phi_i$. From Figure2.(b), it seems that $g_2$ should explain $\phi_1$ and $g_1$ seems to better correlate with $\phi_2$. However, Figure2.(c) does not show a clear difference between these two measurements. In contrast, the results in Figure.3.(c) seems to indicate clearly that g1 should mainly be explain $\phi_1$ and $\phi_2$ while $g_2$ explain $\phi_3$. Figure.3.(a) seems to corroborate this finding (as $g_2$ does not vary much vertically, assuming that $\phi_3$ is vertical). But it seems that Figure.3.(b) show mainly the horizontal variation of $g_2$ while it should mainly vary vertically. So it is unclear how to link these two quantities, which is the main message of the paper. To better illustrate this link, maybe adding the direction of $\sum_{i = 1}^n \beta_{i,k}$ to the plot of the manifold colored by $g_k$ would better show the link between them (I assume this would be correlated with the direction of the color gradient?).}
+
+We have differentially colored the selected coordinates in Figure 2 in order to show the relationship to the results obtained using Manifold Lasso.  We have also added coordinate systems to all manifold figures to more clearly exhibit the relationship.  Figure 3b in particular depicts a vertical slice of the toroidal manifold depicted in the Figure 3a.  We apologize for the confusing terminology 'radial slice,' and have added coordinates to this Figure \skcomment{To do}, as well as emphasizing that the value of $g_1$ is constant for this subset.
+
+\textbf{
+\subsubsection{Experimental results (p.15): }The experimental setup is light and fails to highlight the limits of the proposed method. For the swiss roll example, it seems to be easy to compare the results for multiple manifold embedding techniques and show that they provide similar results. For the real MD data, the fact that there is only 4 elements in the dictionary seems rather small compared to the dimension of the ambient space and to the previous experiments. In the cases where p = 4, the problem seems easy and the technique appears to be not really relevant as it is probably quicker to see directly how these functions vary on the manifold manually. The experiments would be more convincing by adding a lot of different dictionary elements and see if the correct explanation are still chosen. Also, in all experiments, the chosen functions seems to be independent. It would be interesting to include an experiments with function that are dependents to see the indeterminacy of ManifoldLasso in this cases, and to assess if the technique is able to still select the most important explanation.
+}
+
+We have included results for several different embedding methods for the Swiss Roll example, and included results using expanded and highly colinear dictionaries for all real data examples that show that the ambiguous support-recovery in the presence of colinearity still tends to select meaningful functions.
+
+\textbf{
+\subsection{Minor corrections}
+\subsubsection{4.1 Neighbors Ni (p.4)}: It is unclear if i is included in $N_i$ or not. From the definition, it seems so but it seems to add 0 columns in $A_i$, $B_i$ which seems unnecessary. Maybe it could be clarified?
+}
+
+Although adding $i$ to $N_i$ does not change the linear system, it does effect the tangent space estimation, and so we have specified that $i \not \in N_i$.
+
+\textbf{\subsubsection{Definition of $\Xi_i$ and $\Phi_i$ (p.4):} The definition should use [ to be consistent with the definition of the matrix $\Phi$ in page 3: $\Xi_i = [\xi_i' ]i' \in N_i$ and $\Phi_i = \phi (\xi_i') ] i'\in N_i$ .}
+
+We have adjusted the notation accordingly.
+
+\textbf{\subsubsection{Limit of K for $r_N \rightarrow \infty$ (p.4)} To improve the clarity, the limit should be explicitly given.}
+
+We have added this limit.
+
+\textbf{\subsubsection{Last sentence of the ?kernel matrix definition (p.4)} ?used manifold estimation algorithms? $\rightarrow$ ?used in manifold estimation algorithms?.}
+
+We have corrected this typo.  \textcolor{red}{Done}
+
+\skcomment{We have added the code along with a README file and tested the instructions on a new machine. TODO}
+
+\textbf{\subsubsection{Algorithm LocalPCA weighted mean (p.4)}: Expanding the weighted mean as 
+\begin{align*}
+(K_i,N_i 1_{k_i} )? 1_{k_i} N_i \Xi_i = \frac{1}{Z} ?? K_{i,i'} \xi_{i'}
+i' ?N_i
+\end{align*}
+with $Z = ??\sum_{i??N_i} K_{i,i'}$ might help the reader better understand that this notation are simply weighted mean in the following.}
+
+In the spirit of this comment, we have adopted the more standard notation
+$\tilde K_{i,N_i} = (K_i,N_i 1_{k_i} )? 1_{k_i} N_i \Xi_i $.
+
+
+\textbf{\subsubsection{The embedding of a point (p.5)} Isn?t the ?m embedding coordinates of the points in a neighborhood of a point i? the definition of$\Phi$ given page 4?}
+
+We have removed the redundancy on page 6 and also fixed the definition on page 5 (dimension of $\Phi_i$ was wrong previously, although this wasn't pointed out).
+
+\textbf{\subsubsection{Projection on $T_\Phi (\xi_i)\phi(M)$ (p.7-8)}
+ The projection operator are missing a $\Phi$ for the manifold and the $(\xi_i)$ is not in subscript.}
+
+We assume this was in reference to the missing subscript in equation 6 in the previous version, and have fixed the typo.
+
+\textbf{\subsubsection{Approximate inequality in (7) (p.8)}
+This property is not immediate and I could not find the linked result in do Carmo book. A reference to the corresponding Property in the book or a clearer explanation would be appreciated here.}
+
+\textbf{\subsection{Correspondance between Yi and $\text{Proj}_{T_{\phi(\xi_i)} \phi(M) }I_m (p.8)$}
+This correspondence could be better highlighted. In particular, this whole paragraph about pullback would be easier to understand if a reference to figure.2 was given at the beginning. The Figure helps a lot to understand the concepts and the relation between the different objects.}
+
+\textbf{\subsubsection{Representing molecular configurations (p.15)} It is not easy to see the effect of this representation technique on the proposed method. A solution would be to add a simpler experiment in the case of the rigid ethanol, where the orientation of the molecule is fixed, so there is no need to remove rotation and symmetries anymore. This would permits to see that in both cases, the correct dictionary elements g1,2 are chosen.}
+
+We include here an analysis using a fixed orientation.  Although the angular configuration does have an effect on the magnitude of the gradients, it does not in practice alter the results.
+
+\textbf{\subsubsection{?Group Lasso for sparse functional regression was introduced in Meila et al. (2018)? (p.9)}
+Meila et al. (2019) seems to be a preprint version of the submitted manuscript. I don?t understand the distinction that is made between this two papers and I think including the results on support estimation in the present manuscript would improve it.
+}
+We have included the support recovery result in the theory section.
+
+\textbf{\subsubsection{Smooth partition of unity subordinate (p.12)}
+The choice of notation as ?? is confusing with the coordinate functions of the manifold maps ?i. Using ?? could help distinguish them.
+}
+
+\textbf{\subsubsection{Regularization parameter $\lambda$ range (p.15)} For sparse regression model, it is usual to define the regularization parameter lambda in the interval $[0, 1]$ by rescaling the problem relatively to $\lambda_{max}$ defined as the smallest value of $\lambda$ such that $\beta = 0$ is a solution of (11). This value can be computed directly as
+$\lambda_{max} = \| X^T Y\|_{F,\infty}$ .
+}
+
+\skcomment{We didn't do this.  The maximum $\lambda$ seems like it should be
+\begin{align*}
+\lambda_{max} = \max_p \frac{\|X_j^T Y_j\|_2}{nd}
+\end{align*}
+but this doesn't appear to be correct. What we are currently doing is searching for the $\lambda$ at which the number of recovered coordinates is equal to $d$; maybe we can say this instead?}
+ \mmp{we did this already, maybe put in text} 
+
+\textbf{\subsection{Swiss roll experiment (p.16)} The swiss roll experiment would be improved by using multiple techniques to learn the manifold and compare the results, like e.g. LLE. This would confirm that this technique can be used independently from the chosen manifold learning technique and that the results are similar.
+}
+
+We have added multiple embedding methods for the swiss roll and compare the results, showing that \ouralg~ can be used independently of the chosen embedding method.
+
+\skcomment{Should we explain why in particular LLE is a bad method since it was mentioned here?}
+
+\textbf{\subsubsection{ Figure.2/3 (p.17)}
+ The figure is reference as a table. In subfigure 2/3.(a) and 2/3.(b), the direction of the axis $\Phi_i$ should be included to allow the reader to clearly see the correlation between the direction and the color gradient of color. This remark is general for all figure showing a gradient of color in a manifold. In figure 3.(b), the direction of the slice is unclear (adding the coordinate system would clarify this).}
+
+
+We have added axes to all manifold embedding figures.
+
+\mmp{The parametrization by angles that leads to the $\xi$ coordinates is already invariant to rotations and symmetries.} I attempted to respond, but I have no idea what the R really wants. If you change the representation you may potentially change the manifold. Not sure how to answer, except to do the experiment sort of dumbly. 
+
+
+\section{Reviewer 2}
+
+\textbf{The problem of producing explanatory results in machine learning has been gaining interest and traction in recent years, and this work fits into that push. The problem tackled in this work is interesting, and with some work, I think there could be a broadly interesting paper that would be appreciated by a wide audience. Below, I present potential areas of improvement, grouped by the sections at (http://www.jmlr.org/reviewer-guide.html). 
+}
+
+\textbf{
+\subsection{Goal}
+ This works seeks to produce explainable manifold embeddings. That is, given a data set and a dictionary, non-linear functions mapping the dictionary to the embedding are learned. Essentially, it performs manifold dictionary learning with a pre-specified dictionary.
+ }
+
+
+\textbf{
+\subsection{Description:}The description of the method is somewhat straining to read. It is not clear as written what exactly is going on after the first two steps in the algorithm. My takeaway is that an embedding (of the data and perhaps the dictionary?) is performed, some other operations involving gradients are performed, and then a group lasso is performed between the data and the embedded dictionary. I.e., as written, the novelty of this work seems to be combining several methods. The theoretical results are also somewhat unclear: essentially, an analogue of a 'full rank implies uniqueness of the result' statement is provided. This proof is readable and looks correct.  
+}
+
+We have clearly highlighted the novelty of this method is several locations throughout the paper ().  The novelty of the method is in the application of group lasso to estimate the functional support, in terms of dictionaries of functions, of manifold learning algorithms. Group lasso, here, can be seen as finding an interpretable approximation to the functions learned by the manifold learning algorithm.
+Although in many situations, including those in the experiments, the rank condition is not satisfied, the rank condition result is still relevant since it demonstrates the non-trivial result that manifold topology beyond dimension does not restrict the size of the minimum support.  Additionally, we now include results of the mutual-incoherence type (see also Reviewer 3 comments) that are checkable and relevant in practice.  We could also include results about isometry, but these would probably need to be first understood in the tslasso context.
+
+\textbf{
+\subsection{Evaluation:}
+The experiments as conveyed are interesting but not convincing, and are not really compelling or readable for a non-domain expert (chemist). In particular, the figures are rather small, and from the figures, the success or failure of the method is not clear. It is not clear (to a non-chemist) what the explanations here are, and how whatever this method is is more explanatory. Is the sparsity shown in the figures supposed to convey this? Moreover, it is not clear what connection, if any, the theoretical results have to the experimental setup, and why one should care. Additionally, how sensitive is the choice of embedding method and parameters? A local Gaussian sort of kernel seems to be the method of choice, but there is not much if any discussion about this. 
+}
+
+In all figures, according to the support recovery procedure described in ouralg, the results are correct.  We thought this was clear through inspection of the regularization path, and have attempted to make this more clear in the revision.  The key reason that a method such as this is 'more explanatory' is that the number of selected functions is equal to the dimension of the manifold.
+In terms of embedding method, we could show other nearest neighbor or autoencoder methods, and duplicate the results.
+The embedding radius and number of neighbor parameters used in the Diffusion Maps algorithm are included in Table X.  Variation of these parameters will alter the results of the method, since, for example, a large enough radius will cause the embedding to represent the data at a single point.  However, within a range of values, the results are the same.
+
+We have included figures that more comprehensively represent the success or failure of the method, and also figures that connect newly developed theoretical results added in response to Reviewer 1
+
+\textbf{
+\subsection{Significance:}
+ It is not clear, as written, what the significance and novelty of this paper is. The method in this paper can be compared to dictionary learning with a known, pre-defined dictionary. Why not learn a dictionary? There are several works that learn a dictionary on manifolds, including 'Manifold optimization-based analysis dictionary learning with an $\ell_1$-norm regularizer' by Li et al (2018), 'On A Nonlinear Generalization of Sparse Coding and Dictionary Learning' by Xie et al (2013) and their (2012) paper that is relatively similar, and 'Multiscale Dictionary Learning: Non-Asymptotic Bounds and Robustness' by Maggioni et al (2016, in JMLR). I am unsure of the novelty of this work given that a dictionary is not learned, and a predefined one is fit to.}
+
+The significance of this paper is approximating a learned dictionary with a pre-defined one, given that a pre-defined dictionary has an advantage in terms of interpretability.  We have included discussion of the above papers.
+
+The $\ell_{1/2}$ (square root norm) used in Li et al (not to be confused with the $\ell_{1,2}$ notation often used for the group lasso), encourages sparsity in
+
+\textbf{
+\subsection{ Related Work and Discussion}
+There could be more relation and comparisons with other manifold dictionary learning methods, and in general other dictionary learning methods. In general, there is a lack of machine learning context to this work, and there are no alternatives to this work presented or discussed.
+}
+
+\textbf{\subsection{Clarity}
+\subsubsection{Style}
+The work would benefit from a reorganization. As written, the algorithm statement is not clear, and the preceding development is hard to follow. In a technical sense (grammar, spelling, etc), the paper is fine, but it is not readable. Additionally, the formatting doesn?t quite seem correct (spacing).
+}
+
+We have reorganized the paper to highlight the key contributions, and decrease emphasis on aspects which are less central by moving them to the supplement (move gradient estimation to supplement???).
+We have made use of the JMLR sty file (check to make sure looking right).  The changes we have made in the paper have been made with readability in mind. 
+
+
+\textbf{
+\subsubsection{Goals and Contributions}
+The goals are clearly stated, but once again, what the contributions are is not exactly clear. There needs to be a greater distinction between what is novel and what is not, as well as more motivation for this problem in a non-chemistry context. 
+}
+
+\textbf{
+\subsubsection{Reproducibility}
+ As written, I do not feel like I would be able to replicate this work in a timely manner. In particular, the algorithm statement is not clear, and as mentioned above, the experiments need more clarity.
+ }
+ \textbf{
+\subsubsection{New techniques and terminology}
+Alternatives to the method beyond human inspection are not discussed. }
+We have included discussion of alternatives to human inspection.
+
+ \textbf{
+\subsubsection{Examples}
+There are applications, but (as previously stated) they are not convincing and are rather domain specific.
+}
+
+We disagree with the reviewer's assessment that these examples are domain specific; rather, we focus on the chemistry example as it is sufficient to emphasize the the features of our method.  The learned manifolds in our applications are cleaner and higher-dimensional than examples we have looked at from other domains, such as differentiation trajectories learned from single-cell genomic analysis, or in latent spaces projections of images. We believe that this is not intrinsic to the nature of the assayed system, but rather reflects a greater abundance of data with which to estimate these data manifold.  In many other settings, dictionaries such as ours may be constructed out of domain-related functions such as gene sets, or through learned-interpretable intermediates.
+
+We have also in the discussion included a relationship to saliency-map based methods.
+
+\textbf{
+\section{
+Reviewer 3}
+The goal of this manuscript is to find an embedding $\phi(x) = (\phi_1(x), \dots , \phi_m(x))$ of a d-
+dimensional submanifold $M \subset R^D$ as a smooth mapping $\phi(x) = h(g_S(x)) $from partial functions
+$g_S(x)$ in a given dictionary $G = \{g_1(x), \dots , g_p(x)\}$ to a m-dimensional space $R^m$ with $d \leq m \ll D$. Such a problem includes the two basic issues, selection of the support set S and identification
+of the possible function h. In this manuscript, the first issue is touched only. It is clear that
+the functional independence of functions in the dictionary G should be assumed for the selection
+problem to guarantee the uniqueness of S.
+In this manuscript, an algorithm, ManifoldLasso, is given for selecting the support set S.
+It consists of 9 steps. Basically, the first four steps are employed to generate a m-dimensional
+embedding $\Phi (\Xi_i)$ of the samples $\Xi_i \in M$. The Steps 5-7 estimate an orthogonal basis $T_i$ of
+the tangent space $T \xi_i M$, gradient $\nabla g(\xi_i) = [\nabla_\xi g_1(\xi), \dots , \nabla_\xi g_p(\xi_i)] $of the dictionary $g(x) =
+(g_1(x), \dots, g_p(x))$ at each $\xi_i$
+, and projection $X_i = T_i^T \nabla_\xi g(\xi_i)$ of $\nabla \xi g(\xi_i)$ onto the tangent space.
+Step 8 estimates the Riemannian metric $G_i$ that can be used to determine the pull-back $Y_i$ of $\text{Proj} T_{\phi (\xi )} \phi(M) I_M$
+to the tangent space $T_{\xi_i} M$. That is, for $A_i = \text{Proj }T_{\xi_i} M[\xi_{i'} - \xi_i]i' \in N_i$ with a
+neighbor set $N_i$ of $\xi_i$ and $B_i = [\pi(\xi_{i'}) ? \phi(\xi_i)]i' \in N_i$, the inner product matrix $A_i^T Y_i$
+is equal to
+$(\text{Proj}_{T\phi (\xi )}  \phi(M)  B_i)
+TG_i(\text{Proj}_{T\phi(\xi_i)}\phi(M)
+I_m) = B_i^T
+ G_i$ approximately. Hence, the pull-back $Y_i$
+is also
+estimated in Step 8, via solving the least square problem $\min \| Y_iA_i^T Y_i ? B_i^T G_i \|$.
+The last step estimates the support set S by Group Lasso, under the claim that each $Y_i$ can be represented by the partial set part $X_{i,S}$ of $X_i$. The approach sounds good and makes sense, except the claim in the last step.
+The correction of this claim is not clear to me. The assumptions $\phi_k (x) = h_k (g_S (x))$ and $\nabla g_S \phi(\xi_i) = \nabla g_S (\xi_i) \beta_{i,S}$ for $\phi (x) = (\phi_1 (x) , \dots, \phi_m (x))$ where $\beta_{i,S} = [\beta_{i,S1}, \dots, \beta_{i,Sm}]$
+$\beta_i,S,k = \partial h_k (g_S (\xi_i))$.  Hence, $\partial g_S \nabla T_i \phi(\xi_i) = T_i^T \nabla \phi(\xi_i) = T_i^T \nabla \phi(\xi_i) = X_{i,S} \beta_{i,S} = X_i \beta_i.$
+%gS(x) = [gj(x)]j?S give ???k(?i) = ?
+%???(?i) = ??gS(?i)?i,S for ?(x) = (?1(x),··· ,?m(x)), where ?i,S = [?i,S,1,··· ,?i,S,m] and
+%?i,S,k = ?hk (gS(?i)). Hence, ?gS
+%gradTi?(?i) = TiT???(?i) = TiT??gS(?i)?i,S = Xi,S?i,S = Xi?i,
+\mmp{here starts Sams version}
+where $\beta_i$ is row-sparse with the uniform row-support S for all $\xi_i$. Here, Group Lasso works on the sequence $\grad T_i \phi (\xi_i)$, rather than the pull-back sequence $Y_i$ of $\proj T_i \phi(\xi_i)\phi(M)I_m$. It is required to make the relation between $\grad T_i \phi (\xi_i)$ and $Y_i$ clearly.
+
+\skcomment{$Y_i$ is an estimate of $\grad T_i \phi (\xi_i)$.  See also response to}
+\mmp{We rewrote this part of the paper to more clearly explain how to arrive at $Y_i$. Just in case, we offer here a more detailed derivation of (10) from (8) and (9). Let $G_i=H\Sigma H^T$ where $H$ is an orthonormal $m\times d$ matrix and $\Sigma$ a diagonal positive definite $d\times d$ matrix. This decomposition follows from the rank of $G_i$ being equal to $d$. Thus, $H$ is the basis for \tphim. Now, $\tilde{B}_i=HH^TB_i$, therefore $H^T\tilde{B}_i=H^TB_i$, and similarly $H^TI_m=H^T\tilde{Y}_i$. Putting it all together, $\tilde{B}_i^TH\Sigma H^T \tilde{Y}_i=(H^TB_i)^T\Sigma H^TI_m=B_iG_iI_m$.}
+
+My second concern is on efficiency of the algorithm. If the embedding dimension m is larger than the intrinsic dimension d of the manifold, the embedding in Step 4 may be not unique or robust since the problem is unsupervised. \mmp{Embeddings of high dimensional data are generically not unique. All work on manifold learning, including ours, is under this paradigm. More precisely, each embedding algorithm produces its own coordinate system $\phi$. Typically, also, $\phi$ is not an isometry. These are standard conditions, and these are the conditions we assume in section 2. We agree with the reviewer that the fact that $\phi$ depends on the algorithm and data is not entirely satisfactory, for e.g. a domain user. This is why we wrote this paper. In the case the scientist user already has a good set of possible coordinate functions $\G$, they can replace the artifical $\phi$'s with their meaningful $g$'s. }
+
+The estimation of tangent spaces many be also distorted. It is not clear how the algorithm works if the distortion is not ignorable. Analysis or numerical comparison on this issue should be given when $m > d$. \mmp{The reviewer must have missed the beginning of Section XXX where we stated that we consider $\phi$ to not be an isometry, and therefore we estimate the tangent space $\tphim$ by a different method than local PCA.}
+
+
+\skcomment{We are unclear about the relationship of these two sentences.  We discuss algorithmic efficiency in Section X.  When $m > d$ (and indeed when $m = d$ or $m <d$) then embedding may not necessarily be unique, but since our method inputs the embedding jointly within information about its geometry relative to the original data, our approach is robust to this concern.} \mmp{One feature is $G_i$ is that we obtain the distortion metric for the actual embedding. Hence, if the embedding changes, e.g. because we use another embedding algorithm, the $G_i$ matrices change accordingly. This is visible from Algorithm RMetric.}
+
+\skcomment{The Riemannian metric construction corrects for distortion in the embedding concurrently with estimation of the tangent space, both when $m >d$ and when $m=d$.}
+\mmp{here starts MMP's version}
+where $\beta_i$ is row-sparse with the uniform row-support S for all $\xi_i$. Here, Group Lasso works on the sequence $\grad T_i \phi (\xi_i)$, rather than the pull-back sequence $Y_i$ of $\text{Proj}_{T \phi(\xi_i)} \phi(M)I_m$. It is required to make the relation between $\grad T_i \phi (\xi_i)$ and $Y_i$ clearly.
+}
+As you say, $Y_i$ is an estimate of $\grad T_i \phi (\xi_i)$. This property follows directly from the pushforward Riemannian metric $G_i$.  In paritucular, given any neighbor of a point $i$...
+
+\textbf{
+My second concern is on efficiency of the algorithm. If the embedding dimension m is larger than the intrinsic dimension d of the manifold, the embedding in Step 4 may be not unique or robust since the problem is unsupervised.
+}
+We discuss algorithmic efficiency in Section X.  When $m > d$ (and indeed when $m = d$ or $m <d$) then embedding may not necessarily be unique, but since our method inputs the embedding jointly within information about its geometry relative to the original data, our approach is robust to this concern. \mmp{One feature is $G_i$ is that we obtain the distortion metric for the actual embedding. Hence, if the embedding changes, e.g. because we use another embedding algorithm, the $G_i$ matrices change accordingly. This is visible from Algorithm RMetric.
+}
+\textbf{
+The estimation of tangent spaces many be also distorted. It is not clear how the algorithm works if the distortion is not ignorable. Analysis or numerical comparison on this issue should be given when $m > d$.}
+
+ \mmp{Is the reviewer referring to $\T_\M$ or to $\T\phi(\M)$ ? For the second, we specifically do not use LocalPCA, which would be sensitive to distortion. On the other hand, the Riemannian metric}
+
+\skcomment{The Riemannian metric construction corrects for distortion in the embedding concurrently with estimation of the tangent space, both when $m >d$ and when $m=d$.}
+
+
+
+\skcomment{We highlight that, for all of our real data examples, $m >d$.  We have also expanded our analysis of the RigidEthanol data set through a variety of noise levels.}
+
+\mmp{Figure 2 in the original submission explains the pull-back of $\grad \phi$. We have now updated its caption for more clarity.}
+
+\textbf{
+Third, I am a bit suspicious on the experiment of SwissRoll. In the literature, SwissRoll is a 3D data set. It is deliberately embed into a higher dimensional space with orthogonal rotation. That is meaningless since the rotation does not change the manifold. It is not clear how to express the manifold-specific functions g1:2 with respect to the hight-dimensional variables and how to get their gradients, though the functions are restricted such that whose gradients form an orthogonal basis of the tangent space at each point.}
+
+\skcomment{While the SwissRoll example is often used in 3d, here we rotate the dataset in the larger 49 dimensional space in order to illustrate the results of the method in a higher-dimensional situation.  Rotation does not change the geometry of the two-dimensional data manifold, but it does effect the projection of the dictionary functions onto this manifold. This situation is of particular interest since the features themselves are used in the dictionary.  We have explained that we acquire the manifold-specific coordinate functions by rotation the usual coordinate functions according to the rotation.}
+
+In this experiment, m is set to be equal to d. Does it make sense?
+
+\skcomment{Manifold embeddings of the SwissRoll generally utilize $m=d$.  The SwissRoll has contractible, two-dimensional topology, so this embedding does not alter the topological character of the manifold while enabling an isometric embedding.}
+
+In Table 2, g1 and g2 are plotted in very similar sharps. Why?
+
+\skcomment{Since g1 and g2 have orthogonal gradient bundles of constant norm that are tangent to the manifold, we expect that the recovery behavior of these two functions should be similar.}
+
+Practically, because m = d, a classical algorithm for nonlinear dimension can correctly recover the 2D coordinates. Why not we take these coordinates as a recovering of g1:2?
+
+\skcomment{ouralg expresses the coordinates recovered by the manifold learning algorithm as functions of a dictionary.  This is desirable since these functions have no a priori intrinsic meaning other than e.g. eigenfunctions of the Laplacian.   Utilizing the recovered coordinates as the functions themselves therefore misses the point of the algorithm.}
+
+
+\skcomment{MISC: normalization of gradients}
+
+\textbf{
+Other commnents.
+1. The discussion given in the bottom of p.7 and the Eq.(7) are not clear. What is the
+projection $\text{Proj} T\phi(\xi_i)M$? Possibly it is a typo of $\text{Proj} T\phi(\xi_i
+)\phi(M)$
+}
+
+\textbf{
+2. No definitions are given for$ L_{i,i?}$ in the Algorithm RMetric.
+}
+\textbf{
+3. The normalizing constant defined in Eq.(13), rather than (12), depends on the neighbor-
+hoods if $T_i$
+?s are estimated by neighbors of each point in the manifold.
+}
+
+
+Sincerely,
+
+\vspace{0.2in}
+Marina Meil\u{a}, Samson Koelle, Hanyu Zhang and Yu-Chia Chen.
+
+
+\end{document}

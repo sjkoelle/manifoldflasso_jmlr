@@ -1,0 +1,123 @@
+\section{Problem formulation, assumptions and challenges}
+\label{sec:problem}
+We make the standard assumption that the observed data
+$\dataset=\{\xi_i \in \rrr^D : i \in 1 \dotsc n\}$ are sampled
+i.i.d. from a {\em smooth manifold} \footnote{The reader is referred
+  to \citet{smoothmfd} for the definitions of the differential
+  geometric terms used in this paper.} $\M$ of intrinsic dimension $d$
+embedded in $\rrr^D$ by the inclusion map. In this
+paper, we will call {\em smooth} any function or manifold of class at
+least ${\cal C}^3$. The precise notion of {\em near} varies with
+  the embedding approach, and is beyond the scope of this paper. We
+assume that the intrinsic dimension $d$ of $\M$ is known; for example,
+by having been estimated previously by one method in
+\citet{Kleindessner2015DimensionalityEW}. The manifold $\M$ is a {\em
+  Riemannian manifold} with {\em Riemannian metric} inherited from the
+ambient space $\rrr^D$. Furthermore, we assume the existence of a
+smooth {\em embedding map} $\phi:\M\rightarrow \phi(\M)\subset\rrr^m$,
+where typically $m << D$.  That is, $\phi$ restricted to $\M$ is
+  a diffeomorphism onto its image, and $\phi(M)$ is a submanifold of
+  $\rrr^m$.  We call the coordinates $\phi(\xi_i)$ in this $m$
+dimensional ambient space the {\em embedding coordinates}; let $\Phi =
+[\phi(\xi_i)^T]_{i=1:n} \in \mathbb R^{n\times m}$.  In practice, the
+mapping of the data $\dataset$ onto $\phi(\dataset)$ represents the
+output of an embedding algorithm, and we only have access to $\M$ and
+$\phi$ via $\dataset$ and its image $\phi(\dataset)$.
+
+In addition, we are given a {\em dictionary} of user-defined and domain-related smooth functions $\G=\{g_1,\ldots g_p,\,\text{with }g_j: U \subseteq \rrr^D \rightarrow \rrr\}$. Our goal is to express the embedding coordinate functions 
+$\phi_1 \dotsc \phi_m$ in terms of functions in $\G$.
+
+More precisely, we assume that
+$\phi(x)=h(g_{j_1}(x),\ldots\,g_{j_s}(x))$, where $h:O\subseteq
+\rrr^s\rightarrow \rrr^m$ is a smooth function of $s$ variables, defined
+on a open subset of $\rrr^s$ containing the ranges of
+$g_{j_1},\ldots\,g_{j_s}$. Let $S=\{{j_1},\ldots\,{j_s}\}$, and
+$g_S=[g_{j_1}(x),\ldots\,g_{j_s}(x)]^T$. The problem is to discover the
+set $S\subset [p]$ such that $\phi=h\circ g_S$. We call $S$ the {\em
+  functional support} of $h$, or the {\em explanation} for the
+manifold $\M$ in terms of $\G$. For instance, in the toluene
+example, the functions in $\G$ are all the torsions in the
+molecule, $s=1$, and $g_S=g_1$ is the explanation for the
+1-dimensional manifold traced by the configurations.
+
+\paragraph{Indeterminacies}
+In differential geometric terms, the explanation $g_S$ is strongly related to finding {\em coordinate systems}, {\em charts}, and {\em parameterizations} of $\M$.
+Since the function $\phi$ given by the embedding algorithm is not unique, the function $h$ cannot be uniquely determined. For the same reason, it would be overly restrictive to assume a parametric form for $h$. Hence, this paper aims to find the support set $S$ circumventing the identification of $h$. We leave to future work the problem of recovering information on how the functions $g_S$ combine to parameterize $\M$.
+
+Indeterminacies w.r.t. the support $S$ itself are also possible. For instance, the support $S$ may not be unique whenever the relationship  $g_1=t(g_2)$, where $t$ is a smooth monotonic function, holds for two functions in $\G$.
+ In Section \ref{sec:theory}
+we give conditions under which $S$ can be
+recovered uniquely; intuitively, they consist of functional
+independencies between the functions in $\G$. For instance, it is
+sufficient to assume that that the dictionary $\G$ is a {\em
+  functionally independent} set, i.e. there is no $g\in \G$ that can be
+obtained as a smooth function of other functions in $\G$. 
+
+\section{Problem formulation, assumptions and challenges}
+%\label{sec:problem}
+We make the standard assumption that the observed data
+$\dataset=\{\xi_i \in \rrr^D : i \in 1 \dotsc n\}$ are sampled
+i.i.d. from a {\em smooth manifold} \footnote{The reader is referred
+  to \citet{smoothmfd} for the definitions of the differential
+  geometric terms used in this paper.} $\M$ of intrinsic dimension $d$
+embedded in $\rrr^D$ by the inclusion map. In this
+paper, we will call {\em smooth} any function or manifold of class at
+least ${\cal C}^3$. The precise notion of {\em near} varies with
+  the embedding approach, and is beyond the scope of this paper. We
+assume that the intrinsic dimension $d$ of $\M$ is known; for example,
+by having been estimated previously by one method in
+\citet{Kleindessner2015DimensionalityEW}. The manifold $\M$ is a {\em
+  Riemannian manifold} with {\em Riemannian metric} inherited from the
+ambient space $\rrr^D$. Furthermore, we assume the existence of a
+smooth {\em embedding map} $\phi:\M\rightarrow \phi(\M)\subset\rrr^m$,
+where typically $m << D$.  That is, $\phi$ restricted to $\M$ is
+  a diffeomorphism onto its image, and $\phi(M)$ is a submanifold of
+  $\rrr^m$.  We call the coordinates $\phi(\xi_i)$ in this $m$
+dimensional ambient space the {\em embedding coordinates}; let $\Phi =
+[\phi(\xi_i)^T]_{i=1:n} \in \mathbb R^{n\times m}$.  In practice, the
+mapping of the data $\dataset$ onto $\phi(\dataset)$ represents the
+output of an embedding algorithm, and we only have access to $\M$ and
+$\phi$ via $\dataset$ and its image $\phi(\dataset)$.
+
+In addition, we are given a {\em dictionary} of user-defined and domain-related smooth functions $\G=\{g_1,\ldots g_p,\,\text{with }g_j: U \subseteq \rrr^D \rightarrow \rrr\}$. Our goal is to express the embedding coordinate functions 
+$\phi_1 \dotsc \phi_m$ in terms of functions in $\G$.
+
+More precisely, we assume that
+$\phi(x)=h(g_{j_1}(x),\ldots\,g_{j_s}(x))$, where $h:O\subseteq
+\rrr^s\rightarrow \rrr^m$ is a smooth function of $s$ variables, defined
+on a open subset of $\rrr^s$ containing the ranges of
+$g_{j_1},\ldots\,g_{j_s}$. Let $S=\{{j_1},\ldots\,{j_s}\}$, and
+$g_S=[g_{j_1}(x),\ldots\,g_{j_s}(x)]^T$. The problem is to discover the
+set $S\subset [p]$ such that $\phi=h\circ g_S$. We call $S$ the {\em
+  functional support} of $h$, or the {\em explanation} for the
+manifold $\M$ in terms of $\G$. For instance, in the toluene
+example, the functions in $\G$ are all the torsions in the
+molecule, $s=1$, and $g_S=g_1$ is the explanation for the
+1-dimensional manifold traced by the configurations.
+
+\paragraph{Indeterminacies}
+In differential geometric terms, the explanation $g_S$ is strongly related to finding {\em coordinate systems}, {\em charts}, and {\em parameterizations} of $\M$.
+Since the function $\phi$ given by the embedding algorithm is not unique, the function $h$ cannot be uniquely determined. For the same reason, it would be overly restrictive to assume a parametric form for $h$. Hence, this paper aims to find the support set $S$ circumventing the identification of $h$. We leave to future work the problem of recovering information on how the functions $g_S$ combine to parameterize $\M$.
+
+Indeterminacies w.r.t. the support $S$ itself are also possible. For instance, the support $S$ may not be unique whenever the relationship  $g_1=t(g_2)$, where $t$ is a smooth monotonic function, holds for two functions in $\G$.
+ In Section \ref{sec:theory}
+we give conditions under which $S$ can be
+recovered uniquely; intuitively, they consist of functional
+independencies between the functions in $\G$. For instance, it is
+sufficient to assume that that the dictionary $\G$ is a {\em
+  functionally independent} set, i.e. there is no $g\in \G$ that can be
+obtained as a smooth function of other functions in $\G$. 
+
+\comment{
+For example,
+the toluene manifold could be equally well be parametrized by
+$g_1=\cos(\tau)$ or by $g_2 = \sin \tau = \cos (\tau + \pi/2)$, or by
+any other function that is related by a monotonic transformation of
+its domain. The number of charts and the existence of universal
+parameterizations of the manifold effect $s$ as well. \skcomment{I
+  understand charts matters in some part of the theory section, but I
+  am wondering why?  A torus has $s=2$ because it has a universal
+  parameterization, while a sphere has $s=2$ expect at a particular
+  point with no measure. A sphere has $2$ charts minimum, while a
+  torus has 3 charts minimum, so what is the correspondence?}
+}

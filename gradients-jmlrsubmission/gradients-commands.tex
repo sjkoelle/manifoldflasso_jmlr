@@ -1,0 +1,124 @@
+%  Environments
+
+\newenvironment{itemize*}{
+\begin{itemize}
+\setlength{\parskip}{0em}
+\setlength{\topparskip}{0em}
+}
+{\end{itemize}}
+
+\newenvironment{enumerate*}{
+\begin{enumerate}
+\setlength{\parskip}{0em}
+\setlength{\topparskip}{0em}
+}
+{\end{enumerate}}
+
+
+% Commands
+\newcommand{\comment}[1]{}
+\newcommand{\techreport}[1]{#1}
+%\newcommand{\mmp}[1]{}
+\newcommand{\hanyuz}[1]{}
+%\newcommand{\skcomment}[1]{}
+\newcommand{\mmp}[1]{\textcolor{red}{#1}}
+\newcommand{\skcomment}[1]{({\color{blue}{SK's comment:}} \textbf{\color{blue}{#1}})}
+%\newcommand{\hanyuz}[1]{({\color{brown}{Hanyuz's comment:}} \textbf{\color{brown}{#1}})}
+
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\beqa}{\begin{eqnarray}}
+\newcommand{\eeqa}{\end{eqnarray}}
+\newcommand{\beqas}{\begin{eqnarray*}}
+\newcommand{\eeqas}{\end{eqnarray*}}
+
+\newcommand{\bit}{\begin{itemize}}
+\newcommand{\eit}{\end{itemize}}
+\newcommand{\bits}{\begin{itemize*}}
+\newcommand{\eits}{\end{itemize*}}
+\newcommand{\benum}{\begin{enumerate}}
+\newcommand{\eenum}{\end{enumerate}}
+\newcommand{\benums}{\begin{enumerate*}}
+\newcommand{\eenums}{\end{enumerate*}}
+\newcommand{\mybullet}{$\bullet$}
+
+%\newcommand{\BlackBox}{\rule{1.5ex}{1.5ex}}  % end of proof
+
+% names
+
+\newcommand{\dpullalg}{{\sc PullBackDPhi}}
+\newcommand{\projg}{{\sc ProjectG}}
+\newcommand{\glassoalg}{{\sc GroupLasso}}
+\newcommand{\embedalg}{{\sc EmbeddingAlg}}
+\newcommand{\flassoalg}{{\sc GroupLasso}}
+\newcommand{\flasso}{{\sc GroupLasso}}
+\newcommand{\svd}{{\sc SVD}} % to be replaced with \flassoalg !!
+\newcommand{\LEalg}{{\sc LaplacianEigenmaps}}
+\newcommand{\rmalg}{{\sc RMetric}}
+\newcommand{\lapalg}{{\sc Laplacian}}
+\newcommand{\tppalg}{{\sc LocalPCA}}
+\newcommand{\ouralg}{{\sc ManifoldLasso}}
+
+
+\newcommand{\srdata}{{\bf SwissRoll}}
+\newcommand{\redata}{{\bf RigidEthanol}}
+\newcommand{\ethdata}{{\bf Ethanol}}
+\newcommand{\toldata}{{\bf Toluene}}
+\newcommand{\maldata}{{\bf Malonaldehyde}}
+
+%  math mode commands
+
+\newcommand {\argmax}[2]{\mbox{\raisebox{-1.7ex}{$\stackrel{\textstyle
+ {\rm #1}}{\scriptstyle #2}$}}\,}
+\newcommand{\nchoosem}[2]{\left(\!\!\!\begin{array}{c}#1\\#2\end{array}\!\!\!\right)}  % use \binom{}{} instead
+\newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial  #2}}
+
+\newcommand{\bigOO}{{\cal O}}
+\newcommand{\dataset}{{\cal D}}
+\newcommand{\onevector}{{\mathbf 1}}
+\newcommand{\rrr}{{\mathbb R}}
+
+\newcommand{\M}{{\cal M}}
+\newcommand{\T}{{\cal T}}
+%\newcommand{\S}{{\cal S}}
+\newcommand{\txim}{\ensuremath{\T_{\xi_i}\M}} % tangent subspace
+\newcommand{\tphim}{\ensuremath{\T_{\phi(\xi_i)}\phi(\M)}} % tangent subspace in phi(M)
+\newcommand{\I}{{\cal I}} % set of indices for which to compute gradients
+
+\newcommand{\G}{{\cal G}} % dictionary
+\newcommand{\neigh}{{\cal N}}
+\newcommand{\X}{{\cal X}}
+\newcommand{\xb}{\mathbf{X}}  % matrices for glasso
+\newcommand{\tilx}{\tilde{x}}
+%\newcommand{\g}{\Fontauri{g}} % R metric as a form Fontauri not working!
+\newcommand{\g}{\mathbf{g}} % R metric as a form
+%\newcommand{\id}{\Fontauri{id}} % induced Euclidean metric as a form
+\newcommand{\id}{\mathbf{id}} % induced Euclidean metric as a form
+
+
+\newcommand{\proj}{\operatorname{Proj}}
+\newcommand{\trace}{\operatorname{trace}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\range}{\operatorname{span}}
+\newcommand{\rowrange}{\operatorname{rowspan}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\grad}{\operatorname{grad}}
+\newcommand{\supp}{\operatorname{supp}}
+
+\newcommand{\barbx}{\bar{\bar{X}}}
+\newcommand{\bhat}{\hat{\beta}}
+\newcommand{\zhat}{\hat{z}}
+\newcommand{\barw}{\bar{\epsilon}}
+\newcommand{\bbar}{\bar{\beta}}
+
+
+% Theorems, etc
+
+%\newtheorem{lemma}{Lemma}
+%\newtheorem{definition}[lemma]{Definition}
+%\newtheorem{proposition}[lemma]{Proposition}
+%\newtheorem{theorem}[lemma]{Theorem}
+%\newtheorem{corollary}[lemma]{Corollary}
+
+
+

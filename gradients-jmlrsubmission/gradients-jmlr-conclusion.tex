@@ -1,0 +1,19 @@
+\section{Conclusion}
+\label{sec:conc}
+Both linear and non-linear dimension reduction methods map data to abstract coordinates, derived from agnostic, intrinsic data properties, such as the covariance matrix, in the case of PCA, or the Laplacian, in the case of the Laplacian Eigenmaps algorithm. \ouralg~regresses the abstract coordinate functions on a dictionary $\G$ of functions of the data that have meaning in the domain of the problem. This allows us to  automatically
+establish relationships between the learned manifold and domain knowledge. The expert is freed from the tedious work of visually inspecting each possible function $g$ with the manifold coordinates; her expertise is used by specifying covariate functions of the data. The recovered results come with guarantees which can be partially checked in practice. With the obvious simplifications, \ouralg~can also be used to assign explanations to coordinates obtained by PCA. 
+
+The approach of \ouralg~is to reconstruct the
+differentials of the manifold coordinates from
+differentials of functional covariates. It is robust to
+non-linearity in both the algorithm and the covariates. It
+requires functions that are smooth, as well as the assumption that the
+data lie near a smooth manifold. We estimate the differentials of the
+manifold embedding algorithm, but use differentials of functional
+covariates that are available analytically. We demonstrate this
+approach on {\em Molecular Dynamics (MD)} simulations that generate
+high-dimensional point clouds sampled from the configuration space of
+a given molecule. Our functional covariates are bond torsions, and the
+embedding coordinates display a denoised version of the data. We demonstrate that \ouralg~can detect the torsions upon which these denoised coordinates, and the
+denoised manifold embedded within them, depend.
+
