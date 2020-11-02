@@ -120,7 +120,8 @@ class FlassoManifold(FlassoExperiment):
             # a = np.zeros((len(neighborspt), q))
             # rescaled_basis = np.matmul(N_tangent_bundle.tangent_bases[selectedpoints[i], :, :][:, :],
             #                            np.diag(N.geom.rmetric.Gsvals[selectedpoints[i]][:dim]))
-            projected_N = np.dot(N_tangent_bundle.tangent_bases[selectedpoints[i]].transpose(), deltaq0.transpose())
+            tan_proj = np.dot(N_tangent_bundle.tangent_bases[selectedpoints[i]],N_tangent_bundle.tangent_bases[selectedpoints[i]].transpose())
+            projected_N = np.dot(deltaq0, tan_proj)
             # projected_N_expanded = np.matmul(N_tangent_bundle.tangent_bases[selectedpoints[i], :, :][:, :], projected_N)
             # a = projected_N_expanded
 
