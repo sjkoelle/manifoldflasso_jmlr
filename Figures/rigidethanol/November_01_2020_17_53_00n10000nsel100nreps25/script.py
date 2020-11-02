@@ -110,7 +110,6 @@ experiment.folder = folder
 
 replicates = {}
 selected_points_save = np.zeros((nreps,nsel))
-
 for i in range(nreps):
     selected_points = np.random.choice(list(range(n)),nsel,replace = False)
     selected_points_save[i] = selected_points
