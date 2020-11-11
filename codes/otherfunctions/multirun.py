@@ -405,15 +405,29 @@ def get_coeffs_and_lambdas(coeff_dict, lower_lambda, higher_lambda):
     return (coeffs, lambdas_relevant)
 
 
+# def get_support(coeffs, dim):
+#     selected_functions = np.asarray(np.where(np.sum(np.sum(coeffs ** 2, axis=1), axis=1) > 0))
+
+#     selection_lambda = np.min(np.where(np.asarray(list(Counter(selected_functions[0]).values())) == dim)[0])
+
+#     selected_functions_at_selection_lambda = selected_functions[1][
+#         np.where(selected_functions[0] == selection_lambda)[0]]
+
+#     return (selected_functions_at_selection_lambda)
+
+
 def get_support(coeffs, dim):
     selected_functions = np.asarray(np.where(np.sum(np.sum(coeffs ** 2, axis=1), axis=1) > 0))
 
-    selection_lambda = np.min(np.where(np.asarray(list(Counter(selected_functions[0]).values())) == dim)[0])
+    sls = np.where(np.asarray(list(Counter(selected_functions[0]).values())) == dim)[0]
+    if len(sls) > 0:
+        selection_lambda = np.min(sls)
+        selected_functions_at_selection_lambda = selected_functions[1][
+            np.where(selected_functions[0] == selection_lambda)[0]]
 
-    selected_functions_at_selection_lambda = selected_functions[1][
-        np.where(selected_functions[0] == selection_lambda)[0]]
-
-    return (selected_functions_at_selection_lambda)
+        return (selected_functions_at_selection_lambda)
+    else:
+        return(np.nan)
 
 
 def get_olsnorm_and_supportsbrute(experiment, replicates):
