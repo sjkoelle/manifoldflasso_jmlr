@@ -1,5 +1,6 @@
 import numpy as np
 from scipy import sparse
+import itertools
 
 def get_atoms_4(natoms, ii, jj):
     # ii = self.ii
@@ -32,3 +33,20 @@ def get_atoms_4(natoms, ii, jj):
     atoms4 = atoms4[1:atoms4.shape[0], :]
     atoms4 = np.asarray(atoms4, dtype=int)
     return (atoms4, atoms4.shape[0])
+
+
+def get_all_atoms_4(natoms):
+    combos = np.asarray(list(itertools.combinations(list(range(natoms)), 4)))
+    nc = combos.shape[0]
+    tor_mat = np.zeros((nc, 6, 4), dtype=int)
+    for c in range(nc):
+        tor_mat[c] = np.asarray([combos[c][[0, 1, 2, 3]],
+                                 combos[c][[1, 0, 2, 3]],
+                                 # combos[c][[0,2,1,3]],
+                                 combos[c][[3, 1, 0, 2]],
+                                 combos[0][[2, 1, 3, 0]],
+                                 # combos[0][[1,2,3,0]],
+                                 combos[0][[0, 3, 2, 1]],
+                                 combos[0][[1, 0, 3, 2]]])
+    output = np.reshape(tor_mat, (nc * 6, 4))
+    return (output, output.shape[0])
