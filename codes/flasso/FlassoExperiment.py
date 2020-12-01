@@ -561,6 +561,28 @@ class FlassoExperiment:
             # print(output[1])
         return (coeffs)
 
+    def get_betas_spam2_warmstart(self, xs, ys, w0,groups, lambdas, n, q, itermax, tol):
+
+        # n = xs.shape[0]
+        p = len(np.unique(groups))
+        lambdas = np.asarray(lambdas, dtype=np.float64)
+        yadd = np.expand_dims(ys, 1)
+        groups = np.asarray(groups, dtype=np.int32) + 1
+        W0 = np.asarray(w0, dtype = np.float32)#np.zeros((xs.shape[1], yadd.shape[1]), dtype=np.float32)
+        Xsam = np.asfortranarray(xs, dtype=np.float32)
+        Ysam = np.asfortranarray(yadd, dtype=np.float32)
+        coeffs = np.zeros((len(lambdas), q, n, p))
+        for i in range(len(lambdas)):
+            # alpha = spams.fistaFlat(Xsam,Dsam2,alpha0sam,ind_groupsam,lambda1 = lambdas[i],mode = mode,itermax = itermax,tol = tol,numThreads = numThreads, regul = "group-lasso-l2")
+            # spams.fistaFlat(Y,X,W0,TRUE,numThreads = 1,verbose = TRUE,lambda1 = 0.05, it0 = 10, max_it = 200,L0 = 0.1, tol = 1e-3, intercept = FALSE,pos = FALSE,compute_gram = TRUE, loss = 'square',regul = 'l1')
+            output = spams.fistaFlat(Ysam, Xsam, W0, True, groups=groups, numThreads=-1, verbose=True,
+                                     lambda1=lambdas[i], it0=100, max_it=itermax, L0=0.5, tol=tol, intercept=False,
+                                     pos=False, compute_gram=True, loss='square', regul='group-lasso-l2', ista=False,
+                                     subgrad=False, a=0.1, b=1000)
+            coeffs[i, :, :, :] = np.reshape(output[0], (q, n, p))
+            # print(output[1])
+        return (coeffs)
+
     def plot_coefficient_recovery(self, coeffs, coeffspred, lambdas, filename):
 
         p = coeffs.shape[3]
