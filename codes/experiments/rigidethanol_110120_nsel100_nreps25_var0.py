@@ -81,10 +81,10 @@ copyfile(src, filenamescript)
 
 new_MN = True
 new_grad = True
-savename = 'rigidethanol_110120'
+savename = 'rigidethanol_112020_sparse'
 savefolder = 'rigidethanol'
 loadfolder = 'rigidethanol'
-loadname = 'rigidethanol_110120'
+loadname = 'rigidethanol_112020_sparse'
 if new_MN == True:
     experiment = RigidEthanolPCA(dim, cor, var, ii, jj, cores, False, atoms4)
     experiment.M, experiment.Mpca, projector = experiment.generate_data(noise=False)
