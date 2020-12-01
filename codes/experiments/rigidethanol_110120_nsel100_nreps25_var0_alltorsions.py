@@ -46,7 +46,7 @@ from codes.otherfunctions.multiplot import highlight_cell
 
 #set parameters
 n = 10000 #number of data points to simulate
-nsel = 100 #number of points to analyze with lasso
+nsel = 5 #number of points to analyze with lasso
 itermax = 1000 #maximum iterations per lasso run
 tol = 1e-10 #convergence criteria for lasso
 #lambdas = np.asarray([0,.01,.1,1,10,100], dtype = np.float16)#lambda values for lasso
@@ -68,23 +68,23 @@ jj = np.asarray([1,2,3,4,5,6,7,8])
 
 #run experiment
 atoms4 = np.asarray([[6,1,0,4],[4,0,2,8],[7,6,5,1],[3,0,2,4]],dtype = int)
-nreps = 25
+nreps = 1
 lambda_max = 1
 max_search = 30
 
 folder = workingdirectory + '/Figures/rigidethanol/' + now + 'n' + str(n) + 'nsel' + str(nsel) + 'nreps' + str(nreps)
 os.mkdir(folder)
 
-src = workingdirectory + '/codes/experiments/rigidethanol_110120_nsel100_nreps25_var0.py'
+src = workingdirectory + '/codes/experiments/rigidethanol_110120_nsel100_nreps25_var0_alltorsions.py'
 filenamescript = folder + '/script.py'
 copyfile(src, filenamescript)
 
 new_MN = True
 new_grad = True
-savename = 'rigidethanol_110120_alltorsions'
+savename = 'rigidethanol_110120_alltorsions_3pt_sparse'
 savefolder = 'rigidethanol'
 loadfolder = 'rigidethanol'
-loadname = 'rigidethanol_110120_alltorsions'
+loadname = 'rigidethanol_110120_alltorsions_3pt_sparse'
 if new_MN == True:
     experiment = RigidEthanolPCA(dim, cor, var, ii, jj, cores, False, atoms4)
     experiment.M, experiment.Mpca, projector = experiment.generate_data(noise=False)
@@ -98,7 +98,7 @@ if new_MN == True:
     #          'wb') as output:
     #      pickle.dump(experiment, output, pickle.HIGHEST_PROTOCOL)
 
-atoms4,p = get_all_atoms_4(natoms,ii,jj)
+atoms4,p = get_all_atoms_4(natoms)
 experiment.p = p
 experiment.atoms4 = atoms4
 experiment.itermax = itermax
@@ -119,6 +119,7 @@ for i in range(nreps):
     replicates[i].df_M,replicates[i].dg_M,replicates[i].dg_w ,replicates[i].dg_w_pca ,replicates[i].dgw_norm  = get_grads(experiment, experiment.Mpca, experiment.M, experiment.N, selected_points)
     replicates[i].xtrain, replicates[i].groups = experiment.construct_X_js(replicates[i].dg_M)
     replicates[i].ytrain = experiment.construct_Y_js(replicates[i].df_M,dimnoise)
+    print('ready')
     replicates[i].coeff_dict = {}
     replicates[i].coeff_dict[0] = experiment.get_betas_spam2(replicates[i].xtrain, replicates[i].ytrain, replicates[i].groups, np.asarray([0]), nsel, experiment.m, itermax, tol)
     replicates[i].combined_norms = {}

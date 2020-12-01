@@ -9,7 +9,7 @@ import spams
 from collections import OrderedDict
 from pylab import rcParams
 from codes.flasso.GLMaccelerated import GLM
-
+import scipy.sparse as ssp
 rcParams['figure.figsize'] = 25, 10
 
 
@@ -541,6 +541,7 @@ class FlassoExperiment:
 
     def get_betas_spam2(self, xs, ys, groups, lambdas, n, q, itermax, tol):
 
+
         # n = xs.shape[0]
         p = len(np.unique(groups))
         lambdas = np.asarray(lambdas, dtype=np.float64)
@@ -553,10 +554,11 @@ class FlassoExperiment:
         for i in range(len(lambdas)):
             # alpha = spams.fistaFlat(Xsam,Dsam2,alpha0sam,ind_groupsam,lambda1 = lambdas[i],mode = mode,itermax = itermax,tol = tol,numThreads = numThreads, regul = "group-lasso-l2")
             # spams.fistaFlat(Y,X,W0,TRUE,numThreads = 1,verbose = TRUE,lambda1 = 0.05, it0 = 10, max_it = 200,L0 = 0.1, tol = 1e-3, intercept = FALSE,pos = FALSE,compute_gram = TRUE, loss = 'square',regul = 'l1')
+            #output = spams.fistaFlat(Ysam, ssp.csc_matrix(Xsam), W0, True, groups=groups, numThreads=-1, verbose=True,
             output = spams.fistaFlat(Ysam, Xsam, W0, True, groups=groups, numThreads=-1, verbose=True,
                                      lambda1=lambdas[i], it0=100, max_it=itermax, L0=0.5, tol=tol, intercept=False,
                                      pos=False, compute_gram=True, loss='square', regul='group-lasso-l2', ista=False,
-                                     subgrad=False, a=0.1, b=1000)
+                                     subgrad=False, a=.1, b=1000)#b = 1000, a =.1
             coeffs[i, :, :, :] = np.reshape(output[0], (q, n, p))
             # print(output[1])
         return (coeffs)
