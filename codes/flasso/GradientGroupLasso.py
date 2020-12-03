@@ -197,6 +197,7 @@ class GradientGroupLasso:
 
 def get_sr_lambda_sam_parallel(replicate, gl_itermax, lambdas_start,reg_l2, max_search, card, tol,learning_rate):
     
+    print('initializing lambda search')
     dg_M = replicate.dg_M
     df_M =  replicate.df_M
     highprobes = np.asarray([])

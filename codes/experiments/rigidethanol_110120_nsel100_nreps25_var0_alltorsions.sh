@@ -11,4 +11,4 @@
 
 export PATH="~/anaconda3/bin:$PATH"
 source activate manifold_env_april
-python -u rigidethanol_110120_nsel100_nreps25_var0_alltorsions.py 
+python -u rigidethanol_110120_nsel100_nreps25_var0_alltorsions.py > re1101_allspams.out

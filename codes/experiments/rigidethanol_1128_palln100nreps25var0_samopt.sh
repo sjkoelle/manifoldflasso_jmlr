@@ -11,4 +11,4 @@
 
 export PATH="~/anaconda3/bin:$PATH"
 source activate manifold_env_april
-python rigidethanol_1128_palln100nreps25var0_samopt.py
+python -u rigidethanol_1128_palln100nreps25var0_samopt.py > re_samall.out
