@@ -106,6 +106,7 @@ class GradientGroupLasso:
 
     def fhatlambda(self,learning_rate,beta_npm_new,beta_npm_old):
 
+        print('lr',learning_rate)
         output = self._L2loss(beta_npm_old) + np.einsum('npm,npm', self._grad_L2loss(beta_npm_old),(beta_npm_new-beta_npm_old)) + (1/(2*learning_rate)) * np.linalg.norm(beta_npm_new-beta_npm_old)**2
         
         return(output)
