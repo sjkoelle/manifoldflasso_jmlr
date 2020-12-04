@@ -18,7 +18,7 @@ from matplotlib.lines import Line2D
 from pylab import rcParams
 from collections import Counter
 from itertools import combinations
-from datetime import datetime
+#from datetime import datetime
 
 from shutil import copyfile
 rcParams['figure.figsize'] = 25, 10
@@ -113,7 +113,7 @@ replicates = {}
 selected_points_save = np.zeros((nreps,nsel))
 
 print('pre-gradient acquisition')
-print(datetime.now())
+print(datetime.datetime.now())
 for i in range(nreps):
     selected_points = np.random.choice(list(range(n)),nsel,replace = False)
     selected_points_save[i] = selected_points
@@ -141,7 +141,7 @@ from pathos.multiprocessing import ProcessingPool as Pool
 from codes.flasso.GradientGroupLasso import batch_stream, get_sr_lambda_sam_parallel
 
 print('pre-gradient descent')
-print(datetime.now())
+print(datetime.datetime.now())
 cores = 16
 pcor = Pool(cores)
 results = pcor.map(lambda replicate: get_sr_lambda_sam_parallel(replicate, gl_itermax, lambdas_start,reg_l2, max_search, card, tol,learning_rate),
@@ -164,7 +164,7 @@ with open(workingdirectory + '/untracked_data/embeddings/' + savefolder + '/' + 
      pickle.dump(results, output, pickle.HIGHEST_PROTOCOL)
 
 print('done')
-print(datetime.now())
+print(datetime.datetime.now())
 
 #fig.savefig(folder + '/dotdistribution.png')
 
