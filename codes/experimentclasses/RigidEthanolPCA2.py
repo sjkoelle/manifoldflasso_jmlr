@@ -43,7 +43,6 @@ class RigidEthanolPCA2(AtomicRegression):
     	Gets atomic tetrahedra based off of ii and jj
     get_atoms_3 :
     	Gets triples of atoms
-
     """
 
     # AtomicRegression(dim, ii, jj, filename)

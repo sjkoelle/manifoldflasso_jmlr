@@ -3,7 +3,7 @@ from codes.geometer.RiemannianManifold import RiemannianManifold
 import numpy as np
 import scipy
 import os
-workingdirectory = os.popen('git rev-parse --show-toplevel').read()[:-1]
+git_workingdirectory = os.popen('git rev-parse --show-toplevel').read()[:-1]
 
 class EthanolAngles(AtomicRegression):
     """
@@ -56,7 +56,10 @@ class EthanolAngles(AtomicRegression):
             self.atoms4 = custom_bonds
             self.p = custom_bonds.shape[0]
 
-    def load_data(self):
+    def load_data(self, workingdirectory = None):
+
+        if workingdirectory is None:
+            workingdirectory = git_workingdirectory
         # filename = 'tolueneangles.npz'
         atoms3 = self.atoms3
         dim = self.dim

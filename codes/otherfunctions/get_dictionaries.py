@@ -44,9 +44,9 @@ def get_all_atoms_4(natoms):
                                  combos[c][[1, 0, 2, 3]],
                                  # combos[c][[0,2,1,3]],
                                  combos[c][[3, 1, 0, 2]],
-                                 combos[0][[2, 1, 3, 0]],
+                                 combos[c][[2, 1, 3, 0]],
                                  # combos[0][[1,2,3,0]],
-                                 combos[0][[0, 3, 2, 1]],
-                                 combos[0][[1, 0, 3, 2]]])
+                                 combos[c][[0, 3, 2, 1]],
+                                 combos[c][[1, 0, 3, 2]]])
     output = np.reshape(tor_mat, (nc * 6, 4))
     return (output, output.shape[0])
