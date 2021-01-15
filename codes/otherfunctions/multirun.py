@@ -383,6 +383,45 @@ def get_support_recovery_lambda(experiment, replicate, lambda_max, max_search, d
     return (high_probe, coeffs, combined_norms)
 
 
+
+
+def get_support_recovery_lambda_warmstart(experiment, replicate, lambda_max, max_search, dim):
+    coeffs = replicate.coeff_dict
+    combined_norms = replicate.combined_norms
+    nsel = replicate.nsel
+    probe = 0.
+
+    tol = experiment.tol
+    itermax = experiment.itermax
+    max_lam = lambda_max
+
+    for i in range(max_search):
+        print(i, probe)
+        if not np.isin(probe, list(combined_norms.keys())):
+            print('probe',probe)
+            coeffs[probe] = experiment.get_betas_spam2(replicate.xtrain, replicate.ytrain, replicate.groups,
+                                                            np.asarray([probe]), nsel, experiment.m, itermax, tol)
+
+            combined_norms[probe] = np.linalg.norm(np.linalg.norm(coeffs[probe][:, :, :, :], axis=2), axis=1)[
+                                         0, :]
+        n_comp = len(np.where(combined_norms[probe] != 0)[0])
+        if n_comp == dim:
+            high_int = probe
+            print('we did it')
+            return (high_int, coeffs, combined_norms)
+        else:
+            if n_comp < dim:
+                max_lam = np.min(max_lam, probe)
+                #high_probe = high_probe / 2
+            if n_comp > dim:
+                min_lam = np.max(min_lam, probe)
+                if len(max_lam) == 0:
+                    probe = probe * 2
+                else:
+                    probe = (min_lam + max_lam)/2
+                #high_probe = high_probe * 1.5
+    # return(lambda_max, coeffs,combined_norms)
+    return (probe, coeffs, combined_norms)
 # def get_coeffs_and_lambdas(coeff_dict, lower_lambda, higher_lambda):
 #     lambdas = np.asarray(list(coeff_dict.keys()))
 #     lambdas.sort()

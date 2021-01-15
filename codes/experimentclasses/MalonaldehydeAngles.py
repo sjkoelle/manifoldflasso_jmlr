@@ -3,7 +3,7 @@ from codes.geometer.RiemannianManifold import RiemannianManifold
 import numpy as np
 import scipy
 import os
-workingdirectory = os.popen('git rev-parse --show-toplevel').read()[:-1]
+git_workingdirectory = os.popen('git rev-parse --show-toplevel').read()[:-1]
 
 class MalonaldehydeAngles(AtomicRegression):
     """
@@ -56,12 +56,13 @@ class MalonaldehydeAngles(AtomicRegression):
             self.atoms4 = custom_bonds
             self.p = custom_bonds.shape[0]
 
-    def load_data(self):
-        # filename = 'tolueneangles.npz'
+    def load_data(self, workingdirectory = None):
+
         atoms3 = self.atoms3
         dim = self.dim
-        # cor = self.cor
-        # xvar = self.xvar
+        if workingdirectory is None:
+            workingdirectory = git_workingdirectory
+
         filename_xyz = workingdirectory + '/untracked_data/chemistry_data/malonaldehyde.mat'
         filename_angle_indices = workingdirectory + '/untracked_data/chemistry_data/malonaldehydeindices022119.npy'
         data_xyz_loaded = scipy.io.loadmat(filename_xyz)
