@@ -70,7 +70,7 @@ class FlassoExperiment:
         p = differential.shape[1]
         d = differential.shape[2]
 
-        gammas = np.sum(np.sum(differential ** 2, axis=2), axis=0) ** (.5)
+        gammas = (1/n)*np.sum(np.sum(differential ** 2, axis=2), axis=0) ** (.5)
         normed = np.swapaxes(differential, 1, 2) / gammas
         #print(normed.shape)
         normed = np.swapaxes(normed, 1, 2)

@@ -222,12 +222,13 @@ def get_sr_lambda_sam_parallel(replicate, gl_itermax, lambdas_start,reg_l2, max_
     coeffs[probe_init_high] = GGL.fit_[-1]['beta']
     combined_norms[probe_init_high] = np.sqrt((np.linalg.norm(coeffs[probe_init_high], axis = 0)**2).sum(axis = 1))
 
-    n_comp = len(np.where(combined_norms[probe_init_high] != 0)[0])
+    n_comp = len(np.where(~np.isclose(combined_norms[probe_init_high],0.,1e-12))[0])
+    #n_comp = len(np.where(combined_norms[probe_init_high] != 0)[0])
     lowprobes = np.append(lowprobes, probe_init_low)
 
     if n_comp == card:
         #high_int = probe
-        print('we did it')
+        print('we did it',np.where(~np.isclose(combined_norms[probe_init_high],0.,1e-12))[0])
         return (probe_init_high, coeffs, combined_norms)
 
     if n_comp < card:
@@ -247,11 +248,13 @@ def get_sr_lambda_sam_parallel(replicate, gl_itermax, lambdas_start,reg_l2, max_
             coeffs[probe] = GGL.fit_[-1]['beta']
             combined_norms[probe] = np.sqrt((np.linalg.norm(coeffs[probe], axis = 0)**2).sum(axis = 1))
 
-        n_comp = len(np.where(combined_norms[probe] != 0)[0])
+        #np.where(~np.isclose(np.linalg.norm(np.linalg.norm(GGL.fit_[-1]['beta'], axis=2), axis=0) ,0., 1e-16))[0]
+        #n_comp = len(np.where(combined_norms[probe] != 0)[0])
+        n_comp = len(np.where(~np.isclose(combined_norms[probe],0.,1e-12))[0])
         if n_comp == card:
             #high_int = probe
-            print('we did it')
-            return (probe, coeffs, combined_norms)
+            print('we did it',np.where(~np.isclose(combined_norms[probe],0.,1e-12))[0])
+            return(probe, coeffs, combined_norms)
         else:
             if n_comp < card:
                 highprobes = np.append(highprobes, probe)

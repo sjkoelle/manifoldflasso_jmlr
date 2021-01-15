@@ -30,7 +30,7 @@ workingdirectory = os.popen('git rev-parse --show-toplevel').read()[:-1]
 sys.path.append(workingdirectory)
 os.chdir(workingdirectory)
 from codes.experimentclasses.RigidEthanolPCA2 import RigidEthanolPCA2
-from codes.otherfunctions.get_dictionaries import get_all_atoms_4
+from codes.otherfunctions.get_dictionaries import get_atoms_4
 from codes.otherfunctions.get_grads import get_grads
 from codes.otherfunctions.multirun import get_support_recovery_lambda
 from codes.otherfunctions.multirun import get_lower_interesting_lambda
@@ -44,7 +44,6 @@ from codes.otherfunctions.multirun import get_cosines
 from codes.flasso.Replicate import Replicate
 from codes.otherfunctions.multirun import get_olsnorm_and_supportsbrute
 from codes.otherfunctions.multiplot import highlight_cell
-
 
 from codes.geometer.RiemannianManifold import RiemannianManifold
 from codes.geometer.ShapeSpace import ShapeSpace
@@ -75,13 +74,11 @@ def get_grads(experiment, Mpca, Mangles, N, selected_points):
     dg_M = experiment.project(subM.tb.tangent_bases, dgw_norm)
     return (df_M2, dg_M, dg_w, dg_w_pca, dgw_norm)
 
-
-
 #set parameters
 n = 10000 #number of data points to simulate
-nsel = 500 #number of points to analyze with lasso
+nsel = 100 #number of points to analyze with lasso
 #itermax = 1000 #maximum iterations per lasso run
-tol = 1e-10 #convergence criteria for lasso
+tol = 1e-14 #convergence criteria for lasso
 #lambdas = np.asarray([0,.01,.1,1,10,100], dtype = np.float16)#lambda values for lasso
 #lambdas = np.asarray(np.hstack([np.asarray([0]),np.logspace(-3,1,11)]), dtype = np.float16)
 n_neighbors = 1000 #number of neighbors in megaman
@@ -101,7 +98,7 @@ jj = np.asarray([1,2,3,4,5,6,7,8])
 
 #run experiment
 atoms4 = np.asarray([[6,1,0,4],[4,0,2,8],[7,6,5,1],[3,0,2,4]],dtype = int)
-nreps = 5
+nreps = 1
 lambda_max = 1
 max_search = 30
 
@@ -114,10 +111,10 @@ os.mkdir(folder)
 
 new_MN = True
 new_grad = True
-savename = 'rigidethanol_120720_samgl_n500_pall_nrep5'
+savename = 'rigidethanol_120620_samgl_n100p12nrep1norm'
 savefolder = 'rigidethanol'
 loadfolder = 'rigidethanol'
-loadname = 'rigidethanol_120720_samgl_n500_pall_nrep5'
+loadname = 'rigidethanol_120620_samgl_n100p12nrep1norm'
 if new_MN == True:
     experiment = RigidEthanolPCA2(dim, cor, var, ii, jj, cores, False, atoms4)
     experiment.M, experiment.Mpca, projector = experiment.generate_data(noise=False)
@@ -131,7 +128,7 @@ if new_MN == True:
     #          'wb') as output:
     #      pickle.dump(experiment, output, pickle.HIGHEST_PROTOCOL)
 
-atoms4,p = get_all_atoms_4(natoms)
+atoms4,p = get_atoms_4(natoms,ii,jj)
 experiment.p = p
 experiment.atoms4 = atoms4
 #experiment.itermax = itermax
@@ -147,7 +144,6 @@ selected_points_save = np.zeros((nreps,nsel))
 print('pre-gradient acquisition')
 print(datetime.datetime.now())
 for i in range(nreps):
-    print(i)
     selected_points = np.random.choice(list(range(n)),nsel,replace = False)
     selected_points_save[i] = selected_points
     replicates[i] = Replicate()

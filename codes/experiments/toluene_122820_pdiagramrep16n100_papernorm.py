@@ -48,6 +48,36 @@ from codes.geometer.ShapeSpace import ShapeSpace
 from codes.geometer.TangentBundle import TangentBundle
 from codes.flasso.Replicate import Replicate
 
+
+from codes.geometer.RiemannianManifold import RiemannianManifold
+from codes.geometer.ShapeSpace import ShapeSpace
+from codes.geometer.TangentBundle import TangentBundle
+
+
+def get_grads(experiment, Mpca, Mangles, N, selected_points):
+    dimnoise = experiment.dimnoise
+    dim = experiment.dim
+    cores = experiment.cores
+
+    tangent_bases = Mpca.get_wlpca_tangent_sel(Mpca, selected_points, dimnoise)
+    subM = RiemannianManifold(Mpca.data[selected_points], dim)
+    subM.tb = TangentBundle(subM, tangent_bases)
+    N.tangent_bundle = TangentBundle(N, np.swapaxes(N.geom.rmetric.Hvv[:,:dim,:],1,2))
+
+    df_M = experiment.get_dF_js_idM(Mpca, N, subM.tb, N.tangent_bundle, selected_points, dimnoise)
+    df_M2 = df_M / np.sum(np.linalg.norm(df_M, axis=1) ** 2, axis=0)**(0.5)
+    dg_x = experiment.get_dx_g_full(Mangles.data[selected_points])
+
+    W = ShapeSpace(experiment.positions, Mangles.data)
+    dw = W.get_dw(cores, experiment.atoms3, experiment.natoms, selected_points)
+    dg_w = experiment.project(np.swapaxes(dw, 1, 2),
+                              experiment.project(dw, dg_x))
+
+    dg_w_pca = np.asarray([np.matmul(experiment.projector, dg_w[j].transpose()).transpose() for j in range(len(selected_points))])
+    dgw_norm = experiment.normalize(dg_w_pca)
+    dg_M = experiment.project(subM.tb.tangent_bases, dgw_norm)
+    return (df_M, dg_M, dg_w, dg_w_pca, dgw_norm)
+
 #set parameters
 n = 50000 #number of data points to simulate
 nsel = 100 #number of points to analyze with lasso
@@ -73,10 +103,10 @@ atoms4 = np.asarray([[9,0,1,2],[0,1,2,3],[1,2,3,4],[2,3,4,5],[3,4,5,6],[4,5,6,1]
 lambda_max = 1
 max_search = 30
 new_MN = True
-savename = 'toluene_110120'
+savename = 'toluene_010521_pdiagram_rep5n500_oldnorm'
 savefolder = 'toluene'
 loadfolder = 'toluene'
-loadname = 'toluene_110120'
+loadname = 'toluene_010521_pdiagram_rep5n500_oldnorm'
 
 folder = workingdirectory + '/Figures/toluene/' + now + 'n' + str(n) + 'nsel' + str(nsel) + 'nreps' + str(nreps)
 os.mkdir(folder)
@@ -120,60 +150,41 @@ for i in range(nreps):
     replicates[i].nsel = nsel
     replicates[i].selected_points = selected_points
     replicates[i].df_M,replicates[i].dg_M,replicates[i].dg_w ,replicates[i].dg_w_pca ,replicates[i].dgw_norm  = get_grads(experiment, experiment.Mpca, experiment.M, experiment.N, selected_points)
-    replicates[i].xtrain, replicates[i].groups = experiment.construct_X_js(replicates[i].dg_M)
-    replicates[i].ytrain = experiment.construct_Y_js(replicates[i].df_M,dimnoise)
-    replicates[i].coeff_dict = {}
-    replicates[i].coeff_dict[0] = experiment.get_betas_spam2(replicates[i].xtrain, replicates[i].ytrain, replicates[i].groups, np.asarray([0]), nsel, experiment.m, itermax, tol)
-    replicates[i].combined_norms = {}
-    replicates[i].combined_norms[0] = np.linalg.norm(np.linalg.norm(replicates[i].coeff_dict[0][:, :, :, :], axis=2), axis=1)[0,:]
-    replicates[i].higher_lambda,replicates[i].coeff_dict,replicates[i].combined_norms = get_support_recovery_lambda(experiment, replicates[i],  lambda_max, max_search,dim)
-    replicates[i].lower_lambda,replicates[i].coeff_dict,replicates[i].combined_norms = get_lower_interesting_lambda(experiment, replicates[i],  lambda_max, max_search)
-    #= experiment.get_betas_spam2(replicates[i].xtrain, replicates[i].ytrain, replicates[i].groups, lambdas, len(selected_points), n_embedding_coordinates, itermax, tol)
+    replicates[i].dg_M = np.swapaxes(replicates[i].dg_M, 1,2)
+
+with open(workingdirectory + '/untracked_data/embeddings/' + savefolder + '/' + savename + 'replicates.pkl' ,
+         'wb') as output:
+     pickle.dump(replicates, output, pickle.HIGHEST_PROTOCOL)
 
 
-fig, axes_all = plt.subplots(nreps, m + 1,figsize=(15 * m, 15*nreps))
-fig.suptitle('Regularization paths')
-for i in range(nreps):
-    replicates[i].coeffs, replicates[i].lambdas_plot = get_coeffs_and_lambdas(replicates[i].coeff_dict, replicates[i].lower_lambda, replicates[i].higher_lambda)
-    plot_reg_path_ax_lambdasearch(axes_all[i], replicates[i].coeffs, replicates[i].lambdas_plot * np.sqrt(m * nsel), fig)
-fig.savefig(folder + '/beta_paths')
+selected_points_save = np.asarray(selected_points_save, dtype = int)
+gl_itermax = 500
+lambdas_start = [0.,.0005 * np.sqrt(nsel * p)]
+max_search = 30
+reg_l2 = 0.
+card = dim
+tol = 1e-14
+learning_rate = 100
 
-print(workingdirectory +
-        '/untracked_data/embeddings/' + savefolder + '/' + savename + 'replicates.pkl')
-with open(workingdirectory +
-        '/untracked_data/embeddings/' + savefolder + '/' + savename + 'replicates.pkl' ,
-        'wb') as output:
-    pickle.dump(replicates, output, pickle.HIGHEST_PROTOCOL)
+from pathos.multiprocessing import ProcessingPool as Pool
+from codes.flasso.GradientGroupLasso import batch_stream, get_sr_lambda_sam_parallel
 
-print(2+2)
-#supports = {}
-#for i in range(nreps):
-#    supports[i] = get_support(replicates[i].coeffs, dim)
+print('pre-gradient descent')
+print(datetime.datetime.now())
+cores = 16
+# pcor = Pool(cores)
+# results = pcor.map(lambda replicate: get_sr_lambda_sam_parallel(replicate, gl_itermax, lambdas_start,reg_l2, max_search, card, tol,learning_rate), batch_stream(replicates))
 
-#fig, ax = plt.subplots(figsize=(15 , 15 ))
-#fig, ax = plt.figure(figsize=(15 , 15 ))
-#plot_support_1d(supports, experiment.p)
-fig.savefig(folder + '/flasso_support')
-
-
-ols_norm, supports_brute = get_olsnorm_and_supportsbrute_1d(experiment,replicates)
-
-
-
-fig, axes_all = plt.subplots(nreps,figsize=(15*nreps,15))
-fig.suptitle('GL norm for different OLS solutions')
+results = {}
 for r in range(nreps):
-    axes_all[r].imshow(np.log(np.expand_dims(ols_norm[r],1)))
-    highlight_cell(0,supports_brute[r][0],color="limegreen", linewidth=3,ax=axes_all[r])
-fig.savefig(folder + '/olsnorms')
+    results[r] = Replicate()
+    results[r] = get_sr_lambda_sam_parallel(replicates[r], gl_itermax, lambdas_start,reg_l2, max_search, card, tol,learning_rate)
 
-fig, ax = plt.subplots(figsize=(15 , 15 ))
-#fig, ax = plt.figure(figsize=(15 , 15 ))
-plot_support_1d(supports_brute, experiment.p)
-fig.savefig(folder + '/ols_supports')
 
-fig, axes = plt.subplots(nreps, p, figsize=(15 * p, 15 * nreps))
-plot_gs_v_dgnorm(experiment,replicates, axes)
-fig.savefig(folder + '/gs_v_dgnorm.png')
+with open(workingdirectory + '/untracked_data/embeddings/' + savefolder + '/' + savename + 'results.pkl' ,
+         'wb') as output:
+     pickle.dump(results, output, pickle.HIGHEST_PROTOCOL)
 
-plot_dot_distributions(experiment,replicates)
+print('done')
+print(datetime.datetime.now())
+

@@ -45,38 +45,6 @@ from codes.flasso.Replicate import Replicate
 from codes.otherfunctions.multirun import get_olsnorm_and_supportsbrute
 from codes.otherfunctions.multiplot import highlight_cell
 
-
-from codes.geometer.RiemannianManifold import RiemannianManifold
-from codes.geometer.ShapeSpace import ShapeSpace
-from codes.geometer.TangentBundle import TangentBundle
-
-
-def get_grads(experiment, Mpca, Mangles, N, selected_points):
-    dimnoise = experiment.dimnoise
-    dim = experiment.dim
-    cores = experiment.cores
-
-    tangent_bases = Mpca.get_wlpca_tangent_sel(Mpca, selected_points, dimnoise)
-    subM = RiemannianManifold(Mpca.data[selected_points], dim)
-    subM.tb = TangentBundle(subM, tangent_bases)
-    N.tangent_bundle = TangentBundle(N, np.swapaxes(N.geom.rmetric.Hvv[:,:dim,:],1,2))
-
-    df_M = experiment.get_dF_js_idM(Mpca, N, subM.tb, N.tangent_bundle, selected_points, dimnoise)
-    df_M2 = df_M / np.sum(np.linalg.norm(df_M, axis=1) ** 2, axis=0)**(0.5)
-    dg_x = experiment.get_dx_g_full(Mangles.data[selected_points])
-
-    W = ShapeSpace(experiment.positions, Mangles.data)
-    dw = W.get_dw(cores, experiment.atoms3, experiment.natoms, selected_points)
-    dg_w = experiment.project(np.swapaxes(dw, 1, 2),
-                              experiment.project(dw, dg_x))
-
-    dg_w_pca = np.asarray([np.matmul(experiment.projector, dg_w[j].transpose()).transpose() for j in range(len(selected_points))])
-    dgw_norm = experiment.normalize(dg_w_pca)
-    dg_M = experiment.project(subM.tb.tangent_bases, dgw_norm)
-    return (df_M2, dg_M, dg_w, dg_w_pca, dgw_norm)
-
-
-
 #set parameters
 n = 10000 #number of data points to simulate
 nsel = 500 #number of points to analyze with lasso
@@ -114,12 +82,12 @@ os.mkdir(folder)
 
 new_MN = True
 new_grad = True
-savename = 'rigidethanol_120720_samgl_n500_pall_nrep5'
+savename = 'rigidethanol_120220_samgl_n100_pall_nrep25_varp00001'
 savefolder = 'rigidethanol'
 loadfolder = 'rigidethanol'
-loadname = 'rigidethanol_120720_samgl_n500_pall_nrep5'
+loadname = 'rigidethanol_120220_samgl_n100_pall_nrep25_varp00001'
 if new_MN == True:
-    experiment = RigidEthanolPCA2(dim, cor, var, ii, jj, cores, False, atoms4)
+    experiment = RigidEthanolPCA2(dim, cor, var, ii, jj, cores, True, atoms4)
     experiment.M, experiment.Mpca, projector = experiment.generate_data(noise=False)
     experiment.q = m
     experiment.m = m
@@ -147,7 +115,6 @@ selected_points_save = np.zeros((nreps,nsel))
 print('pre-gradient acquisition')
 print(datetime.datetime.now())
 for i in range(nreps):
-    print(i)
     selected_points = np.random.choice(list(range(n)),nsel,replace = False)
     selected_points_save[i] = selected_points
     replicates[i] = Replicate()
