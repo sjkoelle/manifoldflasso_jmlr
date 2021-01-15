@@ -29,7 +29,8 @@ now = datetime.datetime.now().strftime("%B_%d_%Y_%H_%M_%S")
 workingdirectory = os.popen('git rev-parse --show-toplevel').read()[:-1]
 sys.path.append(workingdirectory)
 os.chdir(workingdirectory)
-from codes.experimentclasses.RigidEthanolPCA2 import RigidEthanolPCA2
+from codes.geometer.RiemannianManifold import RiemannianManifold
+from codes.experimentclasses.EthanolAngles import EthanolAngles
 from codes.otherfunctions.get_dictionaries import get_all_atoms_4
 from codes.otherfunctions.get_grads import get_grads
 from codes.otherfunctions.multirun import get_support_recovery_lambda
@@ -44,6 +45,7 @@ from codes.otherfunctions.multirun import get_cosines
 from codes.flasso.Replicate import Replicate
 from codes.otherfunctions.multirun import get_olsnorm_and_supportsbrute
 from codes.otherfunctions.multiplot import highlight_cell
+
 
 
 from codes.geometer.RiemannianManifold import RiemannianManifold
@@ -76,61 +78,54 @@ def get_grads(experiment, Mpca, Mangles, N, selected_points):
     return (df_M2, dg_M, dg_w, dg_w_pca, dgw_norm)
 
 
+#set parameters
 
 #set parameters
 n = 10000 #number of data points to simulate
 nsel = 500 #number of points to analyze with lasso
-#itermax = 1000 #maximum iterations per lasso run
-tol = 1e-10 #convergence criteria for lasso
 #lambdas = np.asarray([0,.01,.1,1,10,100], dtype = np.float16)#lambda values for lasso
 #lambdas = np.asarray(np.hstack([np.asarray([0]),np.logspace(-3,1,11)]), dtype = np.float16)
 n_neighbors = 1000 #number of neighbors in megaman
 m = 3 #number of embedding dimensions (diffusion maps)
 #diffusion_time = 1. #diffusion time controls gaussian kernel radius per gradients paper
-diffusion_time = 0.05 #(yuchia suggestion)
+diffusion_time = 1. #(yuchia suggestion)
 dim = 2 #manifold dimension
 dimnoise = 2
-natoms = 9
 cores = 3 #number of cores for parallel processing
-cor = 0.0 #correlation for noise
-var = 0.00001 #variance scaler for noise
-cor = 0.0 #correlation for noise
-var = 0.00001 #variance scaler for noise
 ii = np.asarray([0,0,0,0,1,1,1,2]) # atom adjacencies for dihedral angle computation
 jj = np.asarray([1,2,3,4,5,6,7,8])
-
-#run experiment
 atoms4 = np.asarray([[6,1,0,4],[4,0,2,8],[7,6,5,1],[3,0,2,4]],dtype = int)
+
+#these are just for loading... probably not necessary
 nreps = 5
 lambda_max = 1
-max_search = 30
 
-folder = workingdirectory + '/Figures/rigidethanol/' + now + 'n' + str(n) + 'nsel' + str(nsel) + 'nreps' + str(nreps)
+folder = workingdirectory + '/Figures/ethanol/' + now + 'n' + str(n) + 'nsel' + str(nsel) + 'nreps' + str(nreps)
 os.mkdir(folder)
 
-#src = workingdirectory + '/codes/experiments/rigidethanol_110120_nsel100_nreps25_var0.py'
-#filenamescript = folder + '/script.py'
-#copyfile(src, filenamescript)
 
 new_MN = True
 new_grad = True
-savename = 'rigidethanol_120720_samgl_n500_pall_nrep5'
-savefolder = 'rigidethanol'
-loadfolder = 'rigidethanol'
-loadname = 'rigidethanol_120720_samgl_n500_pall_nrep5'
+savename = 'ethanol_120720'
+savefolder = 'ethanol'
+loadfolder = 'ethanol'
+loadname = 'ethanol_120720'
 if new_MN == True:
-    experiment = RigidEthanolPCA2(dim, cor, var, ii, jj, cores, False, atoms4)
-    experiment.M, experiment.Mpca, projector = experiment.generate_data(noise=False)
+    experiment = EthanolAngles(dim,  ii, jj,cores,atoms4)
+    projector  = np.load(workingdirectory + '/untracked_data/chemistry_data/ethanolangles022119_pca50_components.npy')
+    experiment.M = experiment.load_data()  # if noise == False then noise parameters are overriden
+    experiment.Mpca = RiemannianManifold(np.load(workingdirectory + '/untracked_data/chemistry_data/ethanolangles022119_pca50.npy'), dim)
     experiment.q = m
     experiment.m = m
     experiment.dimnoise = dimnoise
     experiment.projector = projector
     experiment.Mpca.geom = experiment.Mpca.compute_geom(diffusion_time, n_neighbors)
     experiment.N = experiment.Mpca.get_embedding3(experiment.Mpca.geom, m, diffusion_time, dim)
-    # with open(workingdirectory + '/untracked_data/embeddings/' + savefolder + '/' + savename + '.pkl' ,
-    #          'wb') as output:
-    #      pickle.dump(experiment, output, pickle.HIGHEST_PROTOCOL)
-
+    with open(workingdirectory + '/untracked_data/embeddings/' + savefolder + '/' + savename + '.pkl' ,
+             'wb') as output:
+         pickle.dump(experiment, output, pickle.HIGHEST_PROTOCOL)
+natoms = 9
+tol = 1e-14
 atoms4,p = get_all_atoms_4(natoms)
 experiment.p = p
 experiment.atoms4 = atoms4
@@ -198,53 +193,3 @@ with open(workingdirectory + '/untracked_data/embeddings/' + savefolder + '/' + 
 
 print('done')
 print(datetime.datetime.now())
-
-#fig.savefig(folder + '/dotdistribution.png')
-
-
-# fig, axes_all = plt.subplots(nreps, m + 1,figsize=(15 * m, 15*nreps))
-# fig.suptitle('Regularization paths')
-# for i in range(nreps):
-#     replicates[i].coeffs, replicates[i].lambdas_plot = get_coeffs_and_lambdas(replicates[i].coeff_dict, replicates[i].lower_lambda, replicates[i].higher_lambda)
-#     plot_reg_path_ax_lambdasearch(axes_all[i], replicates[i].coeffs, replicates[i].lambdas_plot * np.sqrt(m * nsel), fig)
-# fig.savefig(folder + '/beta_paths')
-
-# supports = {}
-# for i in range(nreps):
-#     supports[i] = get_support(replicates[i].coeffs, dim)
-
-# fig, ax = plt.subplots(figsize=(15 , 15 ))
-# #fig, ax = plt.figure(figsize=(15 , 15 ))
-# plot_support_2d(supports, experiment.p)
-# fig.savefig(folder + '/flasso_support')
-
-# fig, axes_all = plt.subplots(nreps,figsize=(15*nreps,15))
-# fig.suptitle('Cosines for each replicate')
-# for i in range(nreps):
-#     full = np.concatenate([replicates[i].dg_M, np.swapaxes(replicates[i].df_M,1,2)],1)
-#     asdf = get_cosines(full)
-#     axes_all[i].imshow(asdf)
-# fig.savefig(folder + '/cosines')
-
-# ols_norm, supports_brute = get_olsnorm_and_supportsbrute(experiment,replicates)
-
-
-# fig, axes_all = plt.subplots(nreps,figsize=(15*nreps,15))
-# fig.suptitle('GL norm for different OLS solutions')
-# for r in range(nreps):
-#     axes_all[r].imshow(np.log(ols_norm[r]))
-#     highlight_cell(supports_brute[r][1],supports_brute[r][0],color="limegreen", linewidth=3,ax=axes_all[r])
-#     highlight_cell(supports_brute[r][0],supports_brute[r][1],color="limegreen", linewidth=3,ax=axes_all[r])
-# fig.savefig(folder + '/olsnorms')
-
-# fig, ax = plt.subplots(figsize=(15 , 15 ))
-# #fig, ax = plt.figure(figsize=(15 , 15 ))
-# plot_support_2d(supports_brute, experiment.p)
-# fig.savefig(folder + '/ols_supports')
-
-# plot_gs_v_dgnorm(experiment,replicates)
-# fig.savefig(folder + '/gs_v_dgnorm.png')
-
-# plot_dot_distributions(experiment,replicates)
-# fig.savefig(folder + '/gs_v_dgnorm.png')
-

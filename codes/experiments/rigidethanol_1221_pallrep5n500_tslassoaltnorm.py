@@ -45,7 +45,6 @@ from codes.flasso.Replicate import Replicate
 from codes.otherfunctions.multirun import get_olsnorm_and_supportsbrute
 from codes.otherfunctions.multiplot import highlight_cell
 
-
 from codes.geometer.RiemannianManifold import RiemannianManifold
 from codes.geometer.ShapeSpace import ShapeSpace
 from codes.geometer.TangentBundle import TangentBundle
@@ -73,15 +72,13 @@ def get_grads(experiment, Mpca, Mangles, N, selected_points):
     dg_w_pca = np.asarray([np.matmul(experiment.projector, dg_w[j].transpose()).transpose() for j in range(len(selected_points))])
     dgw_norm = experiment.normalize(dg_w_pca)
     dg_M = experiment.project(subM.tb.tangent_bases, dgw_norm)
-    return (df_M2, dg_M, dg_w, dg_w_pca, dgw_norm)
-
-
+    return (df_M2, dg_M, dg_w, dg_w_pca, dgw_norm,tangent_bases)
 
 #set parameters
 n = 10000 #number of data points to simulate
-nsel = 500 #number of points to analyze with lasso
+nsel = 100 #number of points to analyze with lasso
 #itermax = 1000 #maximum iterations per lasso run
-tol = 1e-10 #convergence criteria for lasso
+tol = 1e-14 #convergence criteria for lasso
 #lambdas = np.asarray([0,.01,.1,1,10,100], dtype = np.float16)#lambda values for lasso
 #lambdas = np.asarray(np.hstack([np.asarray([0]),np.logspace(-3,1,11)]), dtype = np.float16)
 n_neighbors = 1000 #number of neighbors in megaman
@@ -114,10 +111,10 @@ os.mkdir(folder)
 
 new_MN = True
 new_grad = True
-savename = 'rigidethanol_120720_samgl_n500_pall_nrep5'
+savename = 'rigidethanol_122120_n500pallnrep5_altnorm_tslasso'
 savefolder = 'rigidethanol'
 loadfolder = 'rigidethanol'
-loadname = 'rigidethanol_120720_samgl_n500_pall_nrep5'
+loadname = 'rigidethanol_122120_n500pallnrep5_altnorm_tslasso'
 if new_MN == True:
     experiment = RigidEthanolPCA2(dim, cor, var, ii, jj, cores, False, atoms4)
     experiment.M, experiment.Mpca, projector = experiment.generate_data(noise=False)
@@ -147,14 +144,15 @@ selected_points_save = np.zeros((nreps,nsel))
 print('pre-gradient acquisition')
 print(datetime.datetime.now())
 for i in range(nreps):
-    print(i)
     selected_points = np.random.choice(list(range(n)),nsel,replace = False)
     selected_points_save[i] = selected_points
     replicates[i] = Replicate()
     replicates[i].nsel = nsel
     replicates[i].selected_points = selected_points
-    replicates[i].df_M,replicates[i].dg_M,replicates[i].dg_w ,replicates[i].dg_w_pca ,replicates[i].dgw_norm  = get_grads(experiment, experiment.Mpca, experiment.M, experiment.N, selected_points)
+    replicates[i].df_M,replicates[i].dg_M,replicates[i].dg_w ,replicates[i].dg_w_pca ,replicates[i].dgw_norm,replicates[i].tangent_bases  = get_grads(experiment, experiment.Mpca, experiment.M, experiment.N, selected_points)
     replicates[i].dg_M = np.swapaxes(replicates[i].dg_M, 1,2)
+    replicates[i].df_M = replicates[i].tangent_bases
+    replicates[i].dg_M = dg = np.swapaxes(replicates[i].dgw_norm,1,2)
 
 with open(workingdirectory + '/untracked_data/embeddings/' + savefolder + '/' + savename + 'replicates.pkl' ,
          'wb') as output:
@@ -164,7 +162,7 @@ with open(workingdirectory + '/untracked_data/embeddings/' + savefolder + '/' + 
 selected_points_save = np.asarray(selected_points_save, dtype = int)
 gl_itermax = 500
 lambdas_start = [0.,.0005 * np.sqrt(nsel * p)]
-max_search = 15
+max_search = 30
 reg_l2 = 0.
 card = dim
 tol = 1e-14
@@ -180,16 +178,6 @@ pcor = Pool(cores)
 results = pcor.map(lambda replicate: get_sr_lambda_sam_parallel(replicate, gl_itermax, lambdas_start,reg_l2, max_search, card, tol,learning_rate),
                 batch_stream(replicates))
 
-    # replicates[i].xtrain, replicates[i].groups = experiment.construct_X_js(replicates[i].dg_M)
-    # replicates[i].ytrain = experiment.construct_Y_js(replicates[i].df_M,dimnoise)
-    # replicates[i].coeff_dict = {}
-    # replicates[i].coeff_dict[0] = experiment.get_betas_spam2(replicates[i].xtrain, replicates[i].ytrain, replicates[i].groups, np.asarray([0]), nsel, experiment.m, itermax, tol)
-    # replicates[i].combined_norms = {}
-    # replicates[i].combined_norms[0] = np.linalg.norm(np.linalg.norm(replicates[i].coeff_dict[0][:, :, :, :], axis=2), axis=1)[0,:]
-    # replicates[i].higher_lambda,replicates[i].coeff_dict,replicates[i].combined_norms = get_support_recovery_lambda(experiment, replicates[i],  lambda_max, max_search,dim)
-    # replicates[i].lower_lambda,replicates[i].coeff_dict,replicates[i].combined_norms = get_lower_interesting_lambda(experiment, replicates[i],  lambda_max, max_search)
-    # #= experiment.get_betas_spam2(replicates[i].xtrain, replicates[i].ytrain, replicates[i].groups, lambdas, len(selected_points), n_embedding_coordinates, itermax, tol)
-
 
 
 with open(workingdirectory + '/untracked_data/embeddings/' + savefolder + '/' + savename + 'results.pkl' ,
@@ -198,53 +186,3 @@ with open(workingdirectory + '/untracked_data/embeddings/' + savefolder + '/' + 
 
 print('done')
 print(datetime.datetime.now())
-
-#fig.savefig(folder + '/dotdistribution.png')
-
-
-# fig, axes_all = plt.subplots(nreps, m + 1,figsize=(15 * m, 15*nreps))
-# fig.suptitle('Regularization paths')
-# for i in range(nreps):
-#     replicates[i].coeffs, replicates[i].lambdas_plot = get_coeffs_and_lambdas(replicates[i].coeff_dict, replicates[i].lower_lambda, replicates[i].higher_lambda)
-#     plot_reg_path_ax_lambdasearch(axes_all[i], replicates[i].coeffs, replicates[i].lambdas_plot * np.sqrt(m * nsel), fig)
-# fig.savefig(folder + '/beta_paths')
-
-# supports = {}
-# for i in range(nreps):
-#     supports[i] = get_support(replicates[i].coeffs, dim)
-
-# fig, ax = plt.subplots(figsize=(15 , 15 ))
-# #fig, ax = plt.figure(figsize=(15 , 15 ))
-# plot_support_2d(supports, experiment.p)
-# fig.savefig(folder + '/flasso_support')
-
-# fig, axes_all = plt.subplots(nreps,figsize=(15*nreps,15))
-# fig.suptitle('Cosines for each replicate')
-# for i in range(nreps):
-#     full = np.concatenate([replicates[i].dg_M, np.swapaxes(replicates[i].df_M,1,2)],1)
-#     asdf = get_cosines(full)
-#     axes_all[i].imshow(asdf)
-# fig.savefig(folder + '/cosines')
-
-# ols_norm, supports_brute = get_olsnorm_and_supportsbrute(experiment,replicates)
-
-
-# fig, axes_all = plt.subplots(nreps,figsize=(15*nreps,15))
-# fig.suptitle('GL norm for different OLS solutions')
-# for r in range(nreps):
-#     axes_all[r].imshow(np.log(ols_norm[r]))
-#     highlight_cell(supports_brute[r][1],supports_brute[r][0],color="limegreen", linewidth=3,ax=axes_all[r])
-#     highlight_cell(supports_brute[r][0],supports_brute[r][1],color="limegreen", linewidth=3,ax=axes_all[r])
-# fig.savefig(folder + '/olsnorms')
-
-# fig, ax = plt.subplots(figsize=(15 , 15 ))
-# #fig, ax = plt.figure(figsize=(15 , 15 ))
-# plot_support_2d(supports_brute, experiment.p)
-# fig.savefig(folder + '/ols_supports')
-
-# plot_gs_v_dgnorm(experiment,replicates)
-# fig.savefig(folder + '/gs_v_dgnorm.png')
-
-# plot_dot_distributions(experiment,replicates)
-# fig.savefig(folder + '/gs_v_dgnorm.png')
-
