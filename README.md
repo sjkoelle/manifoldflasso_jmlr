@@ -1,5 +1,5 @@
 # manifoldflasso_jmlr
-This repository contains code for generation of figures in the ‘Manifold Coordinates with Physical Meaning’ (Koelle, Zhang, Meila, Chen).
+This repository contains code for generation of figures in the Manifold Coordinates with Physical Meaning’ (Koelle, Zhang, Meila, Chen).
 The major steps are 1) configuring the virtual environment and 2) running the code.
 
 1) Configuring the virtual environment

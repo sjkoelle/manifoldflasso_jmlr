@@ -1,0 +1,77 @@
+# manifoldflasso_jmlr
+This repository contains code for generation of figures in the Manifold Coordinates with Physical Meaning’ (Koelle, Zhang, Meila, Chen).
+The major steps are 1) configuring the virtual environment and 2) running the code.
+
+1) Configuring the virtual environment
+This part can be done prior to cloning the manifoldflasso_jmlr repository, and does not depend on being run in the same directory.
+
+1.1) Create a virtual env with megaman dependencies
+
+conda create -n manifold_env_resubmission python=3.5 -y
+source activate manifold_env_resubmission
+conda install --channel=conda-forge -y pip nose coverage cython numpy scipy scikit-learn pyflann pyamg h5py plotly
+
+1.2) Install megaman
+
+mkdir megaman_jmlr
+cd megaman_jmlr
+mkdir tmp
+cd tmp/
+git clone https://github.com/mmp2/megaman.git
+cd megaman
+python setup.py install
+cd ../..
+
+1.4) (Optional) configure jupiter notebook
+conda install -c anaconda ipython
+conda install -c anaconda ipykernel
+ipython kernel install --user --name=manifold_env_resubmission --display-name=manifold_env_resubmission
+
+2) Running the code
+
+2.a) Toy Data)
+
+The RigidEthanol and SwissRoll examples simulate data, and so can be run without adding other files.
+
+2.b MDS Data)
+
+The Toluene, Ethanol, and Malonaldehyde examples require paths to data to be specified.
+ Data is available at xxx.
+
+2.b.1 Agnostic dictionaries)
+
+These will run much faster than full dictionaries, and are runnable on a 2015 macbook pro.
+
+Results can be created e.g.
+
+python codes/experiments/ethanol_1221_p12rep5n500_papernorm.py
+
+or
+
+sbatch codes/experiments/ethanol_1221_p12rep5n500_papernorm.sh
+
+Figures can then be generated using aprioridictionaries_jmlrresubmission.ipynb
+
+2.b.2 A priori dictionaries)
+
+These are much slower.  1 replicate takes around 1 hour on a 2015 macbook pro. 
+
+python codes/experiments/eth_1226_pallrep5n100.py
+
+or
+
+sbatch codes/experiments/eth_1226_pallrep5n100.sh
+
+
+
+2.1) If running on a cluster
+Use the .sh files e.g. 
+sbatch swissroll_041420_nsel_50_nreps5.sh
+
+2.2) If running locally
+source activate manifold_env_resubmission
+
+
+
+
+
