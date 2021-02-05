@@ -303,7 +303,8 @@ def get_cosines(dg):
                 coses[i, j, k] = cosine_similarity(dg[i, j, :], dg[i, k,
                                                                 :])  # sklearn.metrics.pairwise.cosine_similarity(X = np.reshape(dg[:,i,:], (1,d*n)),Y = np.reshape(dg[:,j,:], (1,d*n)))[0][0]
     # cos_summary = np.abs(coses).sum(axis = 0) / n
-    cos_summary = np.sum(coses ** 2, axis=0) / n
+    #cos_summary = np.sum(coses ** 2, axis=0) / n
+    cos_summary = np.abs(np.mean(coses, axis=0))
     return (cos_summary)
 
 
