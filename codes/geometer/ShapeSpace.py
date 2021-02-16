@@ -1,10 +1,3 @@
-import matplotlib.pyplot as plt
-from megaman.embedding import spectral_embedding
-from megaman.geometry import Geometry
-from megaman.geometry import RiemannMetric
-from scipy import sparse
-from scipy.sparse.linalg import norm
-from codes.geometer import TangentBundle
 import numpy as np
 from pathos.multiprocessing import ProcessingPool as Pool
 import torch
@@ -63,9 +56,7 @@ class ShapeSpace(RiemannianManifold):
         nnonzerosvd = 3 * natoms - 7
         internalprojector = np.zeros((len(selind), jacobien.shape[1], nnonzerosvd))
         for i in range(len(selind)):
-            # when rescaling vectors, big directions must be shrunk... this is the riemannian bundle and should be treated as such
             asdf = np.linalg.svd(jacobien[i])
-            #internalprojector[i] = (asdf[0][:, :nnonzerosvd] * asdf[1][:nnonzerosvd] ** (-1))
             internalprojector[i] = (asdf[0][:, :nnonzerosvd] )
         return (internalprojector)
 
@@ -82,23 +73,6 @@ class ShapeSpace(RiemannianManifold):
         jacobien = self.get_wilson(selected_points, atoms3, tdata)
         internalprojector = self.get_internal_projector(natoms, jacobien, selected_points)
         return(internalprojector)
-
-    # def project_vectors(self, internalprojector):
-    #     p = self.p
-    #     natoms = self.natoms
-    #     selected_points = self.selected_points
-    #     dg_config = np.zeros((len(selected_points), natoms * 3 - 7, p))
-    #     for i in range(len(selected_points)):
-    #         dg_config[i] = np.matmul(internalprojector[i].transpose(), self.dg_x[i].transpose())
-    #     dg_config_norm = self.normalize(dg_config)
-    #     naive_tanget_bases = self.get_wlpca_tangent_sel(self.M, selected_points)
-    #     config_tangent_bases = np.zeros((nsel, 20, 2))
-    #     for i in range(len(selected_points)):
-    #         config_tangent_bases[i] = np.matmul(internalprojector[i].transpose(), naive_tanget_bases[i])
-    #     dg_M = np.zeros((nsel, p, 2))
-    #     for i in range(nsel):
-    #         dg_M[i] = np.matmul(config_tangent_bases[i].transpose(), dg_config_norm[i]).transpose()
-    #     self.project_dg_x_norm(self, shape_tangent_bundle, dg_config_norm)
 
 def computeAngle(poses):
     combos = np.asarray([[0,1],[1,2],[2,0]])

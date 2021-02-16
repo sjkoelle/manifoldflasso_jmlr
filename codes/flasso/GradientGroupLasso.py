@@ -106,7 +106,7 @@ class GradientGroupLasso:
 
     def fhatlambda(self,learning_rate,beta_npm_new,beta_npm_old):
 
-        print('lr',learning_rate)
+        #print('lr',learning_rate)
         output = self._L2loss(beta_npm_old) + np.einsum('npm,npm', self._grad_L2loss(beta_npm_old),(beta_npm_new-beta_npm_old)) + (1/(2*learning_rate)) * np.linalg.norm(beta_npm_new-beta_npm_old)**2
         
         return(output)
@@ -163,7 +163,7 @@ class GradientGroupLasso:
             beta_npm_hat_2 = beta_npm_hat.copy()
             for t in range(0, self.max_iter):
                 #print(t,l,rl)
-                print(t)
+                #print(t)
                 L.append(self._loss(beta_npm_hat, rl))
                 L2.append(self._L2loss(beta_npm_hat))
                 PEN.append(self._L1penalty(beta_npm_hat))
