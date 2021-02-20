@@ -1,4 +1,4 @@
-from codes.flasso.FlassoManifold import FlassoManifold
+from codes.flasso.FlassoManifold2 import FlassoManifold
 import autograd.numpy as np
 import scipy.stats
 #import autograd.numpy as np
@@ -31,17 +31,16 @@ class AtomicRegression(FlassoManifold):
     """
 
     # AtomicRegression(dim, ii, jj, filename)
-    def __init__(self, dim, n, ii,jj,natoms, cores, compute_atoms_4 = True):
+    def __init__(self, natoms, ii = None,jj = None,cores = 1):
+
         self.ii = ii
         self.jj = jj
-        self.n = n
+        #self.n = n
         self.natoms = natoms
         self.cores = cores
-        if compute_atoms_4:
-            self.atoms4, self.p = self.get_atoms_4(ii,jj)
-        self.d = natoms
+        #self.d = natoms
         self.atoms3, self.d = self.get_atoms_3()
-        self.dim = dim
+        #self.dim = dim
         self.gradg4 = grad(self.g4)
 
     def get_atoms_3(self):
@@ -116,19 +115,6 @@ class AtomicRegression(FlassoManifold):
 
         return (output)
 
-    # def get_dx_torsionsangles(self, data):
-    #     d = self.d
-    #     p = self.p
-    #     n = data.shape[0]
-    #
-    #     atoms4 = self.atoms4
-    #     natoms4 = len(atoms4)
-    #
-    #
-    #         output[i, :natoms4, :] = self.get_dx_g(data[i]).transpose()
-    #         output[i,natoms4:,:] = np.identity(d)
-    #
-    #     return (output)
 
     def get_dx_g(self, x):
         atoms4 = self.atoms4
@@ -336,4 +322,3 @@ class AtomicRegression(FlassoManifold):
         ca = np.sqrt((tilded1[0] - c1[0]) ** 2 + (tilded1[1] - c1[1]) ** 2 + (tilded1[2] - c1[2]) ** 2)
         output = np.arccos((ab ** 2 - bc ** 2 + ca ** 2) / (2 * ab * ca))
         return (output)
-

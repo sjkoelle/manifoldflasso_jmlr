@@ -1,17 +1,13 @@
 from einops import rearrange
-
 import autograd.numpy as np
 from autograd import jacobian
 from autograd import elementwise_grad
 from autograd import grad
-
 import logging
 from copy import deepcopy
-
 #import numpy as np
 from scipy.special import expit
 from pyglmnet import utils
-
 
 class GradientGroupLasso:
     

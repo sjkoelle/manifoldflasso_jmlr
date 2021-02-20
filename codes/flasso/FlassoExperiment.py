@@ -26,21 +26,21 @@ class FlassoExperiment:
     def __init__(self):
         2 + 2
 
-    def get_norms(self, differential):
-        n = differential.shape[0]
-        # could be p, or q
-        p = differential.shape[1]
-        d = differential.shape[2]
-
-        differential_normalized = np.zeros(differential.shape)
-        vectornorms = np.zeros((n, p))
-        for i in range(n):
-            for j in range(p):
-                if np.linalg.norm(differential[i, j, :]) > 0:
-                    vectornorms[i, j] = np.linalg.norm(differential[i, j, :])
-
-        psum = np.sum(vectornorms, axis=0)
-        return (psum / n)
+    # def get_norms(self, differential):
+    #     n = differential.shape[0]
+    #     # could be p, or q
+    #     p = differential.shape[1]
+    #     d = differential.shape[2]
+    #
+    #     differential_normalized = np.zeros(differential.shape)
+    #     vectornorms = np.zeros((n, p))
+    #     for i in range(n):
+    #         for j in range(p):
+    #             if np.linalg.norm(differential[i, j, :]) > 0:
+    #                 vectornorms[i, j] = np.linalg.norm(differential[i, j, :])
+    #
+    #     psum = np.sum(vectornorms, axis=0)
+    #     return (psum / n)
 
     def _flatten_coefficient(self, coeff):
         n = coeff.shape[1]
@@ -74,20 +74,6 @@ class FlassoExperiment:
         normed = np.swapaxes(differential, 1, 2) / gammas
         #print(normed.shape)
         normed = np.swapaxes(normed, 1, 2)
-    #
-    #     differential_normalized = np.zeros(differential.shape)
-    #     vectornorms = np.zeros((n, p))
-    #     for i in range(n):
-    #         for j in range(p):
-    #             if np.linalg.norm(differential[i, j, :]) > 0:
-    #                 vectornorms[i, j] = np.linalg.norm(differential[i, j, :])
-    #     # psum = np.sum(vectornorms, axis = 0)
-    #     psum = np.sqrt(np.sum(vectornorms ** 2, axis=0))#np.sum(vectornorms ** 2, axis=0)#
-    #     for j in range(p):
-    #         if psum[j] > 0:
-    #             differential_normalized[:, j, :] = (differential[:, j, :] / psum[j])  # *n
-    #
-    #     return (differential_normalized)
         return(normed)
 
 
