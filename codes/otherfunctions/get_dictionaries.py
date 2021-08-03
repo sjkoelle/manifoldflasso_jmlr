@@ -50,3 +50,18 @@ def get_all_atoms_4(natoms):
                                  combos[c][[1, 0, 3, 2]]])
     output = np.reshape(tor_mat, (nc * 6, 4))
     return (output, output.shape[0])
+
+def get_index_matching(probe, superset):
+    
+    probe_permuted = np.asarray([probe[[0, 1, 2, 3]],
+                                 probe[[3,2,1,0]],
+                                 # combos[c][[0,2,1,3]],
+                                 probe[[0,2,1,3]],
+                                 probe[[3,1,2,0]]])
+    
+    output = np.asarray([])
+    for p in range(4):
+        #print(p)
+        output = np.append(output,np.where((superset==tuple(probe_permuted[p])).all(1))[0])
+
+    return(int(output))
