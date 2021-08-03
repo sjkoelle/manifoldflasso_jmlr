@@ -29,41 +29,65 @@ source activate manifold_env_resubmission
 
 The RigidEthanol and SwissRoll examples simulate data, and so can be run without adding other files using 
 
-swiss_jmlrresubmission.ipynb
-rigidethanol_jmlrresubmission.ipynb
+python codes/experiments/re_0219_diagram.py
+python codes/experiments/swissroll_041420_nsel_50_nreps5.py
+
+or
+
+sbatch python codes/experiments/re_0219_diagram.sh
+sbatch python codes/experiments/swissroll_041420_nsel_50_nreps5.sh
+
+Figures may be generated with 
+
+codes/swiss_jmlrresubmission.ipynb
+codes/rigidethanol_jmlrresubmission.ipynb
 
 2.b MDS Data)
 
 The Toluene, Ethanol, and Malonaldehyde examples require paths to data to be specified.
  Data is available at xxx.
 
-2.b.1 A priori  dictionaries)
+2.b.1 Diagram dictionaries)
 
 These will run much faster than full dictionaries, and are runnable on a 2015 macbook pro.
 
 Results can be created e.g.
 
-python codes/experiments/ethanol_1221_p12rep5n500_papernorm.py
+python codes/experiments/eth_0219_diagram.py
+python codes/experiments/mal_0219_diagram.py
+python codes/experiments/toluene_0219_diagram.py
+
+or 
+
+sbatch python codes/experiments/eth_0219_diagram.sh
+sbatch codes/experiments/mal_0219_diagram.sh
+sbatch codes/experiments/toluene_0219_diagram.sh
+
+Figures can then be generated using
+codes/aprioridictionaries_jmlrresubmission.ipynb
+codes/rigidethanol_jmlrresubmission_final.ipynb
+codes/toluene_jmlr_apriori_final.ipynb
+
+2.b.2 Full dictionaries)
+
+These are slower.  1 replicate takes around 1 hour on a 2015 macbook pro. 
+
+python codes/experiments/eth_0219_full.py
+python codes/experiments/mal_0219_full.py
 
 or
 
-sbatch codes/experiments/ethanol_1221_p12rep5n500_papernorm.sh
+sbatch codes/experiments/eth_0219_full.py.sh
+sbatch codes/experiments/mal_0219_full.py.sh
 
-Figures can then be generated using aprioridictionaries_jmlrresubmission.ipynb
+Figures can then be generated using e.g.
 
-2.b.2 Agnostic dictionaries)
-
-These are much slower.  1 replicate takes around 1 hour on a 2015 macbook pro. 
-
-python codes/experiments/eth_1226_pallrep5n100.py
-
-or
-
-sbatch codes/experiments/eth_1226_pallrep5n100.sh
-
-Figures can then be generated using e.g. eth_fulldictionary_jmlrresubmission.ipynb
-
-
+codes/eth_fulldictionary_jmlrresubmission_mflasso_final.ipynb
+codes/eth_fulldictionary_jmlrresubmission_plotmanifolds.ipynb
+codes/eth_fulldictionary_jmlrresubmission_mflassobrute_final.ipynb
+codes/mal_fulldictionary_jmlrresubmission_mflasso_final.ipynb
+codes/mal_fulldictionary_jmlrresubmission_mflassobrute_final.ipynb
+codes/mal_fulldictionary_jmlrresubmission_plotmanifolds.ipynb
 
 
 
