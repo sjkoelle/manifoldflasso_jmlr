@@ -25,12 +25,19 @@ cd ../..
 1.3) Install other packages
 
 conda install pytorch torchvision -c pytorch -y
+
 pip install -U matplotlib
+
 conda install dill
+
 conda install --channel=conda-forge --yes pyglmnet
+
 conda install --channel=conda-forge --yes python-spams
+
 conda install --channel=conda-forge --yes pathos
+
 conda install --channel=conda-forge --yes autograd
+
 conda install seaborn
 
 1.4) (Optional) configure jupiter notebook
