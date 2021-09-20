@@ -55,6 +55,8 @@ conda install -c anaconda ipython
 
 conda install -c anaconda ipykernel
 
+pip install parso==0.7
+
 ipython kernel install --user --name=manifold_env_april --display-name=manifold_env_april
 
 ## 2) Running the code
