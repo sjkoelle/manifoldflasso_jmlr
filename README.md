@@ -8,7 +8,9 @@ This part can be done prior to cloning the manifoldflasso_jmlr repository, and d
 1.1) Create a virtual env with megaman dependencies
 
 conda create -n manifold_env_april python=3.5 -y
+
 source activate manifold_env_april
+
 conda install --channel=conda-forge -y pip nose coverage cython numpy scipy scikit-learn pyflann pyamg h5py plotly
 
 1.2) Install megaman
