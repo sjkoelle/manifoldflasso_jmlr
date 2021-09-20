@@ -55,7 +55,7 @@ conda install -c anaconda ipython
 
 conda install -c anaconda ipykernel
 
-ipython kernel install --user --name=manifold_env_april2 --display-name=manifold_env_april2
+ipython kernel install --user --name=manifold_env_april --display-name=manifold_env_april
 
 2) Running the code
 The RigidEthanol and SwissRoll examples simulate data, and so can be run without adding other files.  The Toluene, Ethanol, and Malonaldehyde examples require data to be added to the untracked_data/chemistry_data folder.  Data is available at xxx.
