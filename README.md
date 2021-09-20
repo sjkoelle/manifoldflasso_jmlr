@@ -71,7 +71,7 @@ source activate manifold_env_april
 
 python swissroll_041420_nsel_50_nreps5.py
 
-### 2.2 
+### 2.2)
 
 Figures are generated in .ipynb notebooks.
 
