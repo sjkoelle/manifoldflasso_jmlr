@@ -50,8 +50,11 @@ conda install --channel=conda-forge --yes autograd
 conda install seaborn
 
 1.4) (Optional) configure jupiter notebook
+
 conda install -c anaconda ipython
+
 conda install -c anaconda ipykernel
+
 ipython kernel install --user --name=manifold_env_april2 --display-name=manifold_env_april2
 
 2) Running the code
@@ -59,10 +62,13 @@ The RigidEthanol and SwissRoll examples simulate data, and so can be run without
 
 2.1) If running on a cluster
 Use the .sh files e.g. 
+
 sbatch swissroll_041420_nsel_50_nreps5.sh
 
 2.2) If running locally
+
 source activate manifold_env_april
+
 python swissroll_041420_nsel_50_nreps5.py
 
 
