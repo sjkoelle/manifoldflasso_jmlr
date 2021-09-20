@@ -16,12 +16,19 @@ conda install --channel=conda-forge -y pip nose coverage cython numpy scipy scik
 1.2) Install megaman
 
 mkdir megaman_jmlr
+
 cd megaman_jmlr
+
 mkdir tmp
+
 cd tmp/
+
 git clone https://github.com/mmp2/megaman.git
+
 cd megaman
+
 python setup.py install
+
 cd ../..
 
 1.3) Install other packages
